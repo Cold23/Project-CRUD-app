@@ -27,6 +27,7 @@ app.use(bodyParser.json());
 
 router.get('/home?', (req, res) => {
 	res.send("home get");
+	console.log("test");
 });
 
 router.get('/supermarkets', (req, res) => {
