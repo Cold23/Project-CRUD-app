@@ -16,7 +16,6 @@ db.connect((err) => {
 	if (err) {
 		throw err;
 	}
-	('MySql Connected');
 });
 
 const app = express();
@@ -96,6 +95,34 @@ router.post('/getallcustomers', function (req, res) {
 	db.query(post, function (err, result) {
 		if (err) throw err;
 		res.send(result);
+	})
+})
+
+router.post('/customersupermarkets', function (req, res) {
+	let id = req.query.id;
+	let post = 'SELECT s.id,s.square_meters,s.days_open,s.times,CONCAT(s.street_name," ",s.street_number," ",s.city," ",s.state," ",s.zipcode) AS adrress, s.phone_number FROM supermarkets AS s, transcaction AS t, customer AS c \
+	WHERE t.store_id = s.id && t.card_id = c.card_id && c.card_id ='+ id
+	db.query(post, function (err, result) {
+		if (err) {
+			console.log(err)
+			res.send({ success: false, msg: err.sqlMessage })
+		} else {
+			res.send({ success: true, data: result })
+		}
+	})
+})
+
+router.post('/getcustomervisittimes', function (req, res) {
+	let id = req.query.id;
+	let post = "SELECT DATE_FORMAT(date,'%H:00') AS time,\
+	COUNT(*) AS value  FROM transcaction WHERE card_id =" + id + " GROUP BY time ORDER by time ASC";
+	db.query(post, function (err, result) {
+		if (err) {
+			console.log(err);
+			throw err;
+		} else {
+			res.send(result);
+		}
 	})
 })
 
@@ -453,7 +480,7 @@ router.get('/randompricehistory', function (req, res) {
 	res.send("DONE")
 })
 
-let id = 81;
+let id = 200;
 
 router.get('/addtranscactionrandom', function (req, res) {
 	var payment_types = [

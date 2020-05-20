@@ -114,7 +114,7 @@ function createItems(data) {
 		"</td><td class = 'text-center'><button id ='deleteitem', class='btn btn-outline-danger btn-sm'>\
                 <i class='fa fa-trash-o'></i>\
 			</button>\
-            </button><button id ='edititem', class='ml-2 btn btn-outline-primary btn-sm'>\
+            <button id ='edititem', class='ml-2 btn btn-outline-primary btn-sm'>\
             <i class='fa fa-edit'></i>\
 			</button>\
         </td>\

@@ -10,11 +10,14 @@
 
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- charting framework-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 
     <!-- Latest compiled JavaScript -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="addnavbar.js"></script>
     <script type="text/javascript" src="customerview.js"></script>
+    <script type="text/javascript" src="customerchart.js"></script>
     <title>Document</title>
 </head>
 
@@ -50,7 +53,7 @@
     <div class="collapse" id="collapse3">
         <div class="container ">
             <table class="sqltable table table-dark table-striped table-hover table-bordered">
-                <caption class="text-center">List of Transcactions</caption>
+                <caption class="text-center">Customer Transcactions</caption>
                 <thead class="text-center">
                     <tr>
                         <th scope="col">Id</th>
@@ -75,7 +78,7 @@
     <div class="container ">
         <h3 class="text-center">Favourite items</h3>
         <table class="sqltable table table-dark table-striped table-hover table-bordered">
-            <caption class="text-center">Top 10 Items</caption>
+            <caption class="text-center">Top 10 items of customer</caption>
             <thead class="text-center">
                 <tr>
                     <th scope="col">Barcode</th>
@@ -90,6 +93,35 @@
 
             </tbody>
         </table>
+    </div>
+
+    <div class="container ">
+        <h3 class="text-center">Visits Stores</h3>
+        <table class="sqltable table table-dark table-striped table-hover table-bordered">
+            <caption class="text-center">Visited stores</caption>
+            <thead class="text-center">
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Square Meters</th>
+                    <th scope="col">Open On</th>
+                    <th scope="col">Hours</th>
+                    <th scope="col">Adrress </th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Action</th>
+
+                </tr>
+            </thead>
+            <tbody class="text-center" id="storesbody">
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container mt-5">
+        <h3 class="text-center">Shopping Times</h3>
+        <canvas id="timeschart" class="mt-5">
+
+        </canvas>
     </div>
 
 

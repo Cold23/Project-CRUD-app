@@ -14,6 +14,15 @@ $(document).ready(function () {
             alert(data.msg);
         }
     })
+    $.post('/customersupermarkets?id=' + id, function (data) {
+        if (data.success) {
+            $.each(data.data, function (index, value) {
+                AddStore(value);
+            })
+        } else {
+            alert(data.msg);
+        }
+    })
     $.post('/customerfavourite?id=' + id, function (data) {
         if (data.success) {
             $.each(data.dat, function (index, value) {
@@ -27,6 +36,11 @@ $(document).ready(function () {
         event.preventDefault();
         var parent = $(this).closest('tr');
         window.open('/transcaction?id=' + parent.data('id'));
+    })
+    $('.sqltable').on('click', '#viewshop', function (event) {
+        event.preventDefault();
+        var parent = $(this).closest('tr');
+        window.open('/viewsuper2?id=' + parent.data('id'));
     })
 });
 
@@ -44,6 +58,21 @@ function CreateCustomer(data) {
     </tr > ";
     $('#customerbody').append(markup);
 
+}
+
+function AddStore(data) {
+    let markup =
+        " <tr id=store-" + data.id + ">\
+            <td>"+ data.id + "</td>\
+            <td>" + data.square_meters + "</td>\
+            <td>" + data.days_open + "</td>\
+            <td>" + data.times + "</td>\
+            <td>" + data.adrress + "</td>\
+            <td>" + data.phone_number + "</td>\
+            <td><button id='viewshop' , class='btn btn-outline-primary btn-sm'><i class='fa fa-eye'></i></button></td>\
+        </tr>"
+    $('#storesbody').append(markup);
+    $('#store-' + data.id).data('id', data.id);
 }
 
 function AddTranscaction(data) {
