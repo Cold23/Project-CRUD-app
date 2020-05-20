@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="addnavbar.js"></script>
+    <script type="text/javascript" src="customerview.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <h2 class="text-center">Selected Customer</h2>
+    <div class="container-fluid">
+        <table id="sqltable" , class="table table-bordered table-striped">
+            <thead class="text-center">
+                <tr>
+                    <th scope="col">Card ID</th>
+                    <th scope="col">Points</th>
+                    <th scope="col">Full Name</th>
+                    <th scope="col">Adrress</th>
+                    <th scope="col">Birth Date</th>
+                    <th scope="col">Married</th>
+                    <th scope="col"># Of Children</th>
+                    <th scope="col">Has Pets(s)</th>
+
+                </tr>
+            </thead>
+            <tbody class="text-center" id="customerbody">
+
+            </tbody>
+        </table>
+    </div><br>
+
+    <div class="card align-items-center" style="width:auto; border: 0px;">
+        <label class="show btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#collapse3"
+            aria-expanded="false" aria-controls="collapse3">Customer Transcactions
+            <i class="fa fa-eye"></i>
+        </label>
+    </div>
+    <div class="collapse" id="collapse3">
+        <div class="container ">
+            <table class="sqltable table table-dark table-striped table-hover table-bordered">
+                <caption class="text-center">List of Transcactions</caption>
+                <thead class="text-center">
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Method</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Date-time</th>
+                        <th scope="col">Store</th>
+                        <th scope="col">Total Pieces Bought</th>
+                        <th scope="col">Total Price</th>
+                        <th scope="col">Action</th>
+
+                    </tr>
+                </thead>
+                <tbody class="text-center" id="transcactionbody">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div><br>
+
+    <div class="container ">
+        <h3 class="text-center">Favourite items</h3>
+        <table class="sqltable table table-dark table-striped table-hover table-bordered">
+            <caption class="text-center">Top 10 Items</caption>
+            <thead class="text-center">
+                <tr>
+                    <th scope="col">Barcode</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Signature Item</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Action</th>
+
+                </tr>
+            </thead>
+            <tbody class="text-center" id="topitembody">
+
+            </tbody>
+        </table>
+    </div>
+
+
+</body>
+
+</html>

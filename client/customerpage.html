@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="addnavbar.js"></script>
+    <script type="text/javascript" src="customerpage.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- form to add -->
+    <div class="container">
+        <h2 class="text-center">Insert New Customer</h2>
+        <form id="form" , class="form-horizontal">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="col col-form-label" , for="card_id">Card ID</label>
+                    <div class="col">
+                        <input type="number" , class="form-control" , name="card_id" , id="id" , placeholder="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col col-form-label" , for="points">Card Points</label>
+                    <div class="col">
+                        <input type="number" , class="form-control " , name="points" , placeholder="120">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col col-form-label" , for="first_name">First Name</label>
+                    <div class="col">
+                        <input type="text" , class="form-control " , name="first_name" , placeholder="Jack">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col col-form-label" , for="last_name">Last Name</label>
+                    <div class="col">
+                        <input type="text" , class="form-control " , name="last_name" , placeholder="Hanma">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="col col-form-label" , for="street_name">Street Name</label>
+                    <div class="col">
+                        <input type="text" , class="form-control" , name="street_name" , placeholder="Name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col col-form-label" , for="street_number">Street Number</label>
+                    <div class="col">
+                        <input type="text" , class="form-control" , name="street_number" , placeholder="number">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="col col-form-label" , for="city">City</label>
+                    <div class="col">
+                        <input type="text" , class="form-control" , name="city" , placeholder="city">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col col-form-label" , for="state">State</label>
+                    <div class="col">
+                        <input type="text" , class="form-control" , name="state" , placeholder="state">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col col-form-label" , for="zipcode">Zipcode</label>
+                    <div class="col">
+                        <input type="number" , class="form-control" , name="zipcode" , placeholder="15122">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="col col-form-label" , for="birth_date" ,>Birth Date</label>
+                    <div class="col">
+                        <input type="date" , class="form-control" , name="birth_date" , placeholder="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col col-form-label" , for="married" ,>Married</label>
+                    <div class="col">
+                        <select class="custom-select" , name="married">
+
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col col-form-label" , for="children" ,># Of Children</label>
+                    <div class="col">
+                        <input type="number" , class="form-control" , name="children" , placeholder="0">
+                    </div>
+                </div>
+                <div class="form-select">
+                    <label class="col col-form-label" , for="pets" ,>Has pet(s)</label>
+                    <div class="col">
+                        <select class="custom-select" , name="pets">
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-offset-2 col-sm-10">
+                <button id='create' class="btn btn-outline-primary">Add</button>
+            </div>
+        </form>
+    </div>
+
+    <h2 class="text-center">All Customers</h2>
+    <div class="container-fluid">
+        <table id="sqltable" , class="table table-bordered table-dark table-hover table-striped">
+            <thead class="text-center">
+                <tr>
+                    <th scope="col">Card ID</th>
+                    <th scope="col">Points</th>
+                    <th scope="col">Full Name</th>
+                    <th scope="col">Adrress</th>
+                    <th scope="col">Birth Date</th>
+                    <th scope="col">Married</th>
+                    <th scope="col"># Of Children</th>
+                    <th scope="col">Has Pets(s)</th>
+                    <th scope="col">Action</th>
+
+                </tr>
+            </thead>
+            <tbody class="text-center" id="customerbody">
+
+            </tbody>
+        </table>
+    </div>
+
+
+</body>
+
+</html>

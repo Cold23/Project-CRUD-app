@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="addnavbar.js"></script>
+
+    <script type="text/javascript" src="transcactionpage.js"></script>
+    <title>Transcactions</title>
+</head>
+
+<body>
+
+    <h2 class="text-center">All Transcactions</h2>
+    <div class="container-fluid">
+        <table id="sqltable" , class="table table-bordered table-hover table-dark table-striped">
+            <thead class="text-center">
+                <tr id="filter_table">
+                    <th scope="col" class='id'>Transcaction ID
+                        <input type="text" class='id' placeholder="Filter">
+                    </th>
+                    <th scope="col" class="payment_method">Payment Method
+                        <input type="text" class="payment_method" placeholder="Filter">
+                    </th>
+                    <th scope="col" class="card_id">Customer Card ID
+                        <input type="text" class="card_id" placeholder="Filter">
+                    </th>
+                    <th scope="col" class="date">Date of transcaction
+                        <input type="text" class="date" placeholder="Filter">
+                    </th>
+                    <th scope="col" class="store_id">Store ID
+                        <input type="text" class="store_id" placeholder="Filter">
+                    </th>
+                    <th scope="col" class="total_price">Total Price
+                        <input type="text" class="total_price" placeholder="Filter">
+                    </th>
+                    <th scope="col" class="total_pieces">Total Pieces Bought
+                        <input type="text" class="total_pieces" placeholder="Filter">
+                    </th>
+                    <th scope="col" class="align-middle">Action</th>
+                </tr>
+            </thead>
+            <tbody class="text-center" id="transcactionbody">
+
+            </tbody>
+        </table>
+    </div>
+
+</body>
+
+</html>

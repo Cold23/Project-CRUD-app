@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="addnavbar.js"></script>
+    <script type="text/javascript" , src="editsuper.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+
+    <h2 class="text-center">Selected Supermarket</h2>
+    <div class="container">
+        <table id="sqltable" , class="table table-bordered table-striped">
+            <thead class="text-center">
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Square Meters</th>
+                    <th scope="col">Open On</th>
+                    <th scope="col">Hours</th>
+                    <th scope="col">Adrress </th>
+                    <th scope="col">Phone</th>
+                </tr>
+            </thead>
+            <tbody class="text-center" id="storebody">
+
+            </tbody>
+        </table>
+    </div>
+
+    <!-- form to add -->
+    <div class="container ">
+        <h2 class="text-center">Edit Supermarket</h2>
+        <form id="editform" , class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-2 col-form-label" , for="id">Supermarket Id</label>
+                <div class="col-sm-10">
+                    <input type="number" , class="form-control" , name="id" , id="id" , placeholder="0">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 col-form-label" , for="square_meters">Square Meters</label>
+                <div class="col-sm-10">
+                    <input type="text" , class="form-control " , name="square_meters" , placeholder="120">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="col-sm-12 col-form-label" , for="open">Open</label>
+                    <div class="col-sm-12">
+                        <select class="custom-select mr-sm-2" , name="days_open" , aria-placeholder="everyday">
+                            <option value="">select</option>
+                            <option value="everyday">everyday</option>
+                            <option value="daily">daily</option>
+                            <option value="dailysaturday">dailysaturday</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-12 col-form-label" , for="opentime">Open Time</label>
+                    <div class="col-sm-12">
+                        <input type="time" , class="form-control" , name="opentime" , id="time1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-12 col-form-label" , for="closetime">Close Time</label>
+                    <div class="col-sm-12">
+                        <input type="time" , class="form-control" , name="closetime" , id="time2">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="col-sm-10 col-form-label" , for="street_name">Street Name</label>
+                    <div class="col-sm-10">
+                        <input type="text" , class="form-control" , name="street_name" , placeholder="Name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-10 col-form-label" , for="street_number">Street Number</label>
+                    <div class="col-sm-10">
+                        <input type="text" , class="form-control" , name="street_number" , placeholder="number">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="col-sm-2 col-form-label" , for="city">City</label>
+                    <div class="col-sm-10">
+                        <input type="text" , class="form-control" , name="city" , placeholder="city">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 col-form-label" , for="state">State</label>
+                    <div class="col-sm-10">
+                        <input type="text" , class="form-control" , name="state" , placeholder="state">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 col-form-label" , for="zipcode">Zipcode</label>
+                    <div class="col-sm-10">
+                        <input type="number" , class="form-control" , name="zipcode" , placeholder="15122">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 col-form-label" , for="phone" ,>Phone</label>
+                <div class="col-sm-10">
+                    <input type="number" , class="form-control" , name="phone_number" , placeholder="123456789">
+                </div>
+            </div>
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" , class="btn btn-primary" id="submitedit">
+            </div>
+        </form>
+    </div><br><br>
+    <div class="container-fluid">
+        <button class="btn btn-outline-primary btn-xl" , id="back"><i class="fa fa-arrow-left"></i> </button>
+    </div>
+
+</body>
+
+</html>
