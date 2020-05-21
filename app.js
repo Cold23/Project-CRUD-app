@@ -126,6 +126,24 @@ router.post('/getcustomervisittimes', function (req, res) {
 	})
 })
 
+router.post('/customermeanweek', function (req, res) {
+	let id = req.query.id;
+	let post = 'SELECT WEEK(date) AS week, COUNT(card_id)/7 AS average FROM transcaction  WHERE card_id =' + id + ' GROUP by week ORDER BY week ASC'
+	db.query(post, function (err, result) {
+		if (err) throw err;
+		res.send(result);
+	})
+})
+
+router.post('/customermeanmonth', function (req, res) {
+	let id = req.query.id;
+	let post = 'SELECT MONTH(date) AS month, COUNT(card_id)/30 AS average FROM transcaction  WHERE card_id =' + id + ' GROUP by month ORDER BY month ASC'
+	db.query(post, function (err, result) {
+		if (err) throw err;
+		res.send(result);
+	})
+})
+
 router.post('/addcustomer', function (req, res) {
 	let post = "SELECT card_id ,\
 	points,\
