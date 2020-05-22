@@ -636,6 +636,26 @@ function randomDate(start, end) {
 }
 //#endregion
 
+router.post('/additem', function (req, res) {
+	let post = "INSERT INTO item SET ?";
+	db.query(post, req.body, function (err) {
+		if (err) {
+			console.log(err);
+			res.send({ success: false, msg: err.sqlMessage })
+		} else {
+			db.query("SELECT c.name as catname,i.* FROM item as i, category as c WHERE i.category_id = c.category_id && i.Barcode =" + req.body.Barcode, function (er, resul) {
+				if (err) {
+					console.log(er);
+					res.send({ success: false, msg: er.sqlMessage })
+				} else {
+					res.send({ success: true, dat: resul });
+					console.log(resul);
+				}
+			})
+		}
+	})
+})
+
 router.post('/addsuperitem', function (req, res) {
 	let id = req.query.id;
 	let barcode = req.body.barcode;

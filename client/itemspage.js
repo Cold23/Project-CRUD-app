@@ -6,6 +6,13 @@ $(document).ready(function () {
             })
         }
     })
+    $.get('/getcategories', function (data, success) {
+        if (success) {
+            $.each(data, (index, value) => {
+                AddCategoryOption(value);
+            });
+        }
+    });
     $('#sqltable').on('click', '#viewitem', function () {
         var parent = $(this).closest('tr');
         window.location.href = '/viewitem?barcode=' + parent.data('id');
@@ -22,6 +29,27 @@ $(document).ready(function () {
             });
         }
     });
+    $('#create').click(function (e) {
+        e.preventDefault()
+        var obj = {};
+        $.each($('#addform').serializeArray(), function (index, value) {
+            if (value.value !== '') obj[value.name] = value.value;
+        });
+        if (obj['Barcode'] == undefined) {
+            alert("Pleace Specify Barcode");
+        } else {
+            $.post('/additem', obj, function (data) {
+                if (data.success) {
+                    $.each(data.dat, function (index, value) {
+                        createItems(value);
+                        $('body, html').animate({ scrollTop: $("#item-" + value.Barcode).offset().top }, "slow");
+                    })
+                } else {
+                    alert(data.msg)
+                }
+            })
+        }
+    })
 });
 
 function createItems(data) {
@@ -42,4 +70,9 @@ function createItems(data) {
     </tr>";
     $('#itembody').append(markup);
     $('#item-' + data.Barcode).data('id', data.Barcode);
+}
+
+function AddCategoryOption(value) {
+    let markup = "<option value=" + value.category_id + ">" + value.name + "</option>"
+    $('#category_options').append(markup);
 }

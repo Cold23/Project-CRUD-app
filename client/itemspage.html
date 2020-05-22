@@ -20,6 +20,62 @@
 </head>
 
 <body>
+
+    <!-- form to add -->
+    <h3 class="text-center bg-light">Insert New Item
+        <label class="collapsebutton btn btn-outline-primary" type="button" data-toggle="collapse"
+            data-target="#addform" aria-expanded="false" aria-controls="addform">
+            <i class="fa fa-eye"></i>
+        </label>
+    </h3>
+    <div class="container">
+        <form id="addform" , class="form-horizontal collapse">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="col col-form-label" , for="name">Item Name</label>
+                    <div class="col">
+                        <input type="text" , class="form-control" , name="name" , placeholder="Spaghetti">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col col-form-label" , for="Barcode">Barcode</label>
+                    <div class="col">
+                        <input type="number" , class="form-control " , name="Barcode" , placeholder="88837454">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="col col-form-label" , for="category_id">Category</label>
+                    <div class="col">
+                        <select id="category_options" class="custom-select" , name="category_id">
+
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col col-form-label" , for="signature_item">Signature Item</label>
+                    <div class="col">
+                        <select id="category_select" class="custom-select " , name="signature_item">
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col col-form-label" , for="current_price">Current Price</label>
+                    <div class="col">
+                        <input type="number" , class="form-control" , name="current_price" , placeholder="23.56">
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-offset-2 col">
+                <input type="submit" , class="btn btn-primary" id="create">
+            </div>
+        </form>
+    </div><br>
+
+
     <h2 class="text-center">All Items </h2>
     <div class="container">
         <table id="sqltable" , class="table table-bordered table-dark table-striped">
