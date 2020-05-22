@@ -7,10 +7,7 @@ $(document).ready(function () {
 			});
 		}
 	});
-	$('#back').click(function (event) {
-		event.preventDefault();
-		window.location = '/supermarkets?';
-	});
+
 	$('.sqltable').on('click', '#deleteitem', function () {
 		if (confirm('Remove item from store')) {
 			var parent = $(this).closest('tr');
@@ -76,10 +73,42 @@ $(document).ready(function () {
 	$.post('/gettranscaction?id=' + id, function (data, success) {
 		if (success) {
 			if (!$.isEmptyObject(data)) {
-				console.log(data);
 				createTranscaction(data);
 			}
 
+		}
+	});
+	$.post('/popularpairs?id=' + id, function (data) {
+		if (data.success) {
+			$.each(data.dat, function (index, value) {
+				AddTopPair(value);
+			})
+		}
+	})
+	$('#submitedit').click(function (event) {
+		event.preventDefault();
+		var obj = {};
+		$.each($('#editform').serializeArray(), function (index, value) {
+			if (value.value !== '') obj[value.name] = value.value;
+		});
+		delete obj['opentime'];
+		delete obj['closetime'];
+		if ($('#time1').val() !== '' && $('#time2').val() !== '') {
+			obj['times'] = $('#time1').val() + '-' + $('#time2').val();
+		}
+		console.log(obj);
+		if (!$.isEmptyObject(obj)) {
+			$.post('/updateshop?id=' + id, obj, function (data) {
+				if (data.success) {
+					if (obj['id']) {
+						window.location.href = window.location.href.replace(/[\?#].*|$/, '?id=' + obj['id']);
+					} else {
+						window.location.reload();
+					}
+				} else {
+					alert(data.msg);
+				}
+			});
 		}
 	});
 
@@ -87,6 +116,7 @@ $(document).ready(function () {
 		event.preventDefault();
 		$(this).children().toggleClass('fa-eye fa-eye-slash');
 	});
+
 });
 
 function AddItemOption(item) {
@@ -96,22 +126,15 @@ function AddItemOption(item) {
 
 function createItems(data) {
 	let markup =
-		'<tr id = item-' +
-		data.Barcode +
-		'><td>' +
-		data.Barcode +
-		'</td><td>' +
-		data.name +
-		'</td><td>' +
-		!!+data.signature_item +
-		'</td><td>' +
-		data.current_price +
-		'$' +
-		'</td><td>' +
-		data.self +
-		'</td><td>' +
-		data.aisle +
-		"</td><td class = 'text-center'><button id ='deleteitem', class='btn btn-outline-danger btn-sm'>\
+		'<tr id = item-' + data.Barcode + '>\
+		<td>' + data.name + '</td>\
+		<td>' + data.Barcode + '</td>\
+		<td>' + data.catname + '</td>\
+		<td>' + !!+data.signature_item + '</td>\
+		<td>' + data.current_price + '$' + '</td>\
+		<td>' + data.self + '</td>\
+		<td>' + data.aisle + "</td>\
+		<td class = 'text-center'><button id ='deleteitem', class='btn btn-outline-danger btn-sm'>\
                 <i class='fa fa-trash-o'></i>\
 			</button>\
             <button id ='edititem', class='ml-2 btn btn-outline-primary btn-sm'>\
@@ -193,6 +216,15 @@ function NewShopRowFromGet(value) {
 		'</td></tr>';
 	$('#storebody').append(markup);
 	$('#super-' + newrow.id).data('id', newrow.id);
+}
+
+function AddTopPair(data) {
+	let markup = "<tr>\
+		<td>"+ data.name1 + "</td>\
+		<td>"+ data.name2 + "</td>\
+		<td>"+ data.weight + "</td>\
+	</tr>"
+	$('#pairbody').append(markup);
 }
 
 $.fn.serializeObject = function () {

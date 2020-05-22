@@ -14,31 +14,33 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="addnavbar.js"></script>
+    <script type="text/javascript" src="customerdetailsview.js"></script>
 
-    <script type="text/javascript" src="itemspage.js"></script>
-    <title>Transcactions</title>
+
+    <title>Customer Details</title>
 </head>
 
 <body>
-    <h2 class="text-center">All Items </h2>
+    <h3 class=" text-center">Customers Details</h3>
     <div class="container">
-        <table id="sqltable" , class="table table-bordered table-dark table-striped">
-            <thead class="text-center">
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Barcode</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Signature Item</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Action</th>
+        <table class="table table-bordered table-dark table-hover">
+            <thead>
 
-                </tr>
+                <th>Name</th>
+                <th>Adrress</th>
+                <th>Birth Date</th>
+                <th>Married</th>
+                <th>Children</th>
+                <th>Pets</th>
+
             </thead>
-            <tbody class="text-center" id="itembody">
+            <tbody id="customerbody">
 
             </tbody>
+
         </table>
     </div>
+
 
 </body>
 

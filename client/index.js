@@ -37,10 +37,6 @@ $(document).ready(function () {
 			}
 		});
 	});
-	$('#sqltable').on('click', '#editshop', function () {
-		var parent = $(this).closest('tr');
-		window.location.href = 'editsuper?id=' + parent.data('id');
-	});
 });
 
 function NewShopRowFromForm(value) {
@@ -137,9 +133,6 @@ function NewShopRowFromGet(value) {
             </button><button id ='viewshop', class='mr-2 btn btn-outline-primary btn-sm'>\
             <i class='fa fa-eye'></i>\
             </button>\
-            </button>\
-            </button><button id ='editshop', class=' btn btn-outline-danger btn-sm'>\
-            <i class='fa fa-edit'></i>\
             </button>\
         </td>\
     </tr>";

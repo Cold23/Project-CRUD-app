@@ -14,6 +14,9 @@ $(document).ready(function () {
             alert(data.msg);
         }
     })
+    $('.show').click(function () {
+        $(this).children('i').toggleClass('fa-eye fa-eye-slash')
+    })
     $.post('/customersupermarkets?id=' + id, function (data) {
         if (data.success) {
             $.each(data.data, function (index, value) {
@@ -42,6 +45,27 @@ $(document).ready(function () {
         var parent = $(this).closest('tr');
         window.open('/viewsuper2?id=' + parent.data('id'));
     })
+    $('#submitedit').click(function (event) {
+        event.preventDefault();
+        var obj = {};
+        $.each($('#editform').serializeArray(), function (index, value) {
+            if (value.value !== '') obj[value.name] = value.value;
+        });
+        console.log(obj);
+        if (!$.isEmptyObject(obj)) {
+            $.post('/editcustomer?id=' + id, obj, function (data) {
+                if (data.success) {
+                    if (obj['card_id']) {
+                        window.location.href = window.location.href.replace(/[\?#].*|$/, '?id=' + obj['card_id']);
+                    } else {
+                        window.location.reload();
+                    }
+                } else {
+                    alert(data.msg);
+                }
+            });
+        }
+    });
 });
 
 function CreateCustomer(data) {
@@ -95,8 +119,9 @@ function AddTranscaction(data) {
 function AddTopItem(data) {
     let markup =
         "<tr id = item-" + data.Barcode + ">\
-        <td>" + "(" + data.occurences + ") " + data.Barcode + "</td>\
         <td>" + data.name + "</td>\
+        <td>" + data.Barcode + "</td>\
+        <td>" + data.catname + "</td>\
         <td>" + !!+data.signature_item + "</td>\
         <td>" + data.current_price + "$" + "</td>\
         <td class = 'text-center'>\

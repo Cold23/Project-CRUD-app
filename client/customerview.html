@@ -44,6 +44,116 @@
         </table>
     </div><br>
 
+    <!-- form to edit -->
+    <h4 class="text-center bg-light">Edit Customer
+        <label class="show btn btn-outline-primary btn-sm" type="button" data-toggle="collapse" data-target="#editform"
+            aria-expanded="false" aria-controls="editform">
+            <i class="fa fa-eye"></i>
+        </label>
+    </h4>
+    <div class="container">
+        <form id="editform" , class="form-horizontal collapse">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="col col-form-label" , for="card_id">Card ID</label>
+                    <div class="col">
+                        <input type="number" , class="form-control" , name="card_id" , id="id" , placeholder="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col col-form-label" , for="points">Card Points</label>
+                    <div class="col">
+                        <input type="number" , class="form-control " , name="points" , placeholder="120">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col col-form-label" , for="first_name">First Name</label>
+                    <div class="col">
+                        <input type="text" , class="form-control " , name="first_name" , placeholder="Jack">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col col-form-label" , for="last_name">Last Name</label>
+                    <div class="col">
+                        <input type="text" , class="form-control " , name="last_name" , placeholder="Hanma">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="col col-form-label" , for="street_name">Street Name</label>
+                    <div class="col">
+                        <input type="text" , class="form-control" , name="street_name" , placeholder="Name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col col-form-label" , for="street_number">Street Number</label>
+                    <div class="col">
+                        <input type="text" , class="form-control" , name="street_number" , placeholder="number">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="col col-form-label" , for="city">City</label>
+                    <div class="col">
+                        <input type="text" , class="form-control" , name="city" , placeholder="city">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col col-form-label" , for="state">State</label>
+                    <div class="col">
+                        <input type="text" , class="form-control" , name="state" , placeholder="state">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col col-form-label" , for="zipcode">Zipcode</label>
+                    <div class="col">
+                        <input type="number" , class="form-control" , name="zipcode" , placeholder="15122">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="col col-form-label" , for="birth_date" ,>Birth Date</label>
+                    <div class="col">
+                        <input type="date" , class="form-control" , name="birth_date" , placeholder="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col col-form-label" , for="married" ,>Married</label>
+                    <div class="col">
+                        <select class="custom-select" , name="married">
+                            <option value="">don't change</option>
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col col-form-label" , for="children" ,># Of Children</label>
+                    <div class="col">
+                        <input type="number" , class="form-control" , name="children" , placeholder="0">
+                    </div>
+                </div>
+                <div class="form-select">
+                    <label class="col col-form-label" , for="pets" ,>Has pet(s)</label>
+                    <div class="col">
+                        <select class="custom-select" , name="pets">
+                            <option value="">don't change</option>
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-offset-2 col-sm-10">
+                <button id='submitedit' class="btn btn-outline-primary">Edit</button>
+            </div>
+        </form>
+    </div><br>
+
     <div class="card align-items-center" style="width:auto; border: 0px;">
         <label class="show btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#collapse3"
             aria-expanded="false" aria-controls="collapse3">Customer Transcactions
@@ -81,6 +191,7 @@
             <caption class="text-center">Top 10 items of customer</caption>
             <thead class="text-center">
                 <tr>
+                    <th scope="col">Name</th>
                     <th scope="col">Barcode</th>
                     <th scope="col">Category</th>
                     <th scope="col">Signature Item</th>

@@ -49,8 +49,7 @@ $(document).ready(function () {
                 weeklabels.push(value.week);
                 weekdata.push(value.average);
             })
-            console.log(weekdata);
-            var BarChart = new Chart(weekctx, {
+            var BarChart2 = new Chart(weekctx, {
                 type: 'bar',
                 data: {
                     labels: weeklabels,
@@ -77,9 +76,8 @@ $(document).ready(function () {
             $.each(data, function (index, value) {
                 monthlabels.push(monthNames[value.month - 1]);
                 monthdata.push(value.average);
-                console.log(value.month)
             })
-            var BarChart = new Chart(monthctx, {
+            var BarChart3 = new Chart(monthctx, {
                 type: 'bar',
                 data: {
                     labels: monthlabels,

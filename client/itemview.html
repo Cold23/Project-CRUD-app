@@ -26,6 +26,7 @@
         <table id="sqltable" , class="table table-bordered table-striped">
             <thead class="text-center">
                 <tr>
+                    <th scope="col">Name</th>
                     <th scope="col">Barcode</th>
                     <th scope="col">Category</th>
                     <th scope="col">Signature Item</th>
@@ -43,6 +44,12 @@
         <h3>Change Item Values</h3>
         <form id='editform-2' , class="form-horizontal">
             <div class="form-row">
+                <div class="form-group">
+                    <label class="col-sm-5 col-form-label" , for="square_meters">Name</label>
+                    <div class="col-sm-12">
+                        <input type="text" , class="form-control " , name="name" , placeholder="Name">
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="col-sm-5 col-form-label" , for="square_meters">Barcode</label>
                     <div class="col-sm-12">

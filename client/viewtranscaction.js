@@ -34,8 +34,9 @@ function AddTranscaction(data) {
 function createItems(data) {
     let markup =
         '<tr id = item-' + data.Barcode + '>\
-        <td>' + data.Barcode + '</td>\
         <td>' + data.name + '</td>\
+        <td>' + data.Barcode + '</td>\
+        <td>' + data.catname + '</td>\
         <td>' + !!+data.signature_item + '</td>\
         <td>' + data.current_price + '$' + '</td>\
         <td>' + data.amount + '</td>\

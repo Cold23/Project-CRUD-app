@@ -47,6 +47,14 @@ router.get('/transcaction', function (req, res) {
 	res.sendFile(__dirname + '/client/viewtranscaction.html');
 })
 
+router.get('/customerdetailsview', function (req, res) {
+	res.sendFile(__dirname + '/client/customerdetailsview.html')
+})
+
+router.get('/salesview', function (req, res) {
+	res.sendFile(__dirname + '/client/salesview.html')
+})
+
 router.post('/gettranscaction1', function (req, res) {
 	let id = req.query.id;
 	let sqlquery = "SELECT * FROM transcaction WHERE id=" + id + " LIMIT 1";
@@ -61,7 +69,7 @@ router.post('/gettranscaction1', function (req, res) {
 
 router.post('/gettranscactionitems', function (req, res) {
 	let id = req.query.id;
-	let sqlquery = "SELECT i.Barcode,c.name,i.signature_item,i.current_price,co.amount\
+	let sqlquery = "SELECT i.name,i.Barcode,c.name as catname,i.signature_item,i.current_price,co.amount\
 	FROM item as i, category as c, contains as co \
 	WHERE co.transcaction_id="+ id + " && i.Barcode = co.barcode && i.category_id = c.category_id";
 	db.query(sqlquery, function (err, result) {
@@ -70,6 +78,19 @@ router.post('/gettranscactionitems', function (req, res) {
 		} else {
 			res.send({ dat: result, success: true });
 		}
+	})
+})
+
+router.post('/getcustomersview', function (req, res) {
+	db.query("SELECT * FROM customer_details", function (err, data) {
+		res.send(data);
+	})
+})
+
+router.post('/getsalesview', function (req, res) {
+	db.query("SELECT * FROM sales ORDER BY id ASC , name ASC", function (err, data) {
+		if (err) throw err;
+		res.send(data);
 	})
 })
 
@@ -162,6 +183,19 @@ router.post('/addcustomer', function (req, res) {
 	})
 })
 
+router.post('/editcustomer', function (req, res) {
+	let id = req.query.id;
+	let post = "UPDATE customer SET ? WHERE card_id = " + id;
+	db.query(post, req.body, function (err) {
+		if (err) {
+			console.log(err)
+			res.send({ success: false, msg: err.sqlMessage })
+		} else {
+			res.send({ success: true })
+		}
+	})
+})
+
 router.post('/deletecustomer', function (req, res) {
 	let id = req.query.id;
 	db.query('DELETE FROM customer WHERE card_id=' + id, function (err) {
@@ -225,7 +259,7 @@ router.post('/getitemhistory', function (req, res) {
 })
 
 router.post('/getitemsall', function (req, res) {
-	let sqlquery = "SELECT i.Barcode, c.name,i.signature_item,i.current_price \
+	let sqlquery = "SELECT i.name, i.Barcode, c.name as catname,i.signature_item,i.current_price \
 	FROM item as i, category AS c \
 	WHERE c.category_id = i.category_id";
 	db.query(sqlquery, function (err, result) {
@@ -241,7 +275,7 @@ router.post('/getitemsall', function (req, res) {
 router.get('/getitem1', function (req, res) {
 	var barcode = req.query.barcode;
 	var id = req.query.id;
-	let sql = 'SELECT  i.Barcode,d.name,i.signature_item,i.current_price,c.self,c.aisle \
+	let sql = 'SELECT i.name, i.Barcode,d.name as catname,i.signature_item,i.current_price,c.self,c.aisle \
 	FROM item AS i , carries AS c, category AS d\
 	WHERE c.barcode = i.Barcode && d.category_id = i.category_id && i.Barcode=' + barcode + '&& c.store_id =' + id;
 	db.query(sql, function (err, result) {
@@ -255,7 +289,7 @@ router.get('/getitem1', function (req, res) {
 
 router.get('/getitem2', function (req, res) {
 	var barcode = req.query.barcode;
-	let sql = 'SELECT i.Barcode,d.name,i.signature_item,i.current_price \
+	let sql = 'SELECT i.name, i.Barcode,d.name as catname,i.signature_item,i.current_price \
 	FROM item AS i ,  category AS d\
 	WHERE d.category_id = i.category_id && i.Barcode=' + barcode;
 	db.query(sql, function (err, result) {
@@ -292,7 +326,7 @@ router.post('/getcustomertranscactions', function (req, res) {
 
 router.post('/customerfavourite', function (req, res) {
 	let id = req.query.id;
-	let post = "SELECT i.Barcode,cat.name,i.signature_item,i.current_price , SUM(tc.amount) as occurences\
+	let post = "SELECT i.name, i.Barcode,cat.name as catname,i.signature_item,i.current_price , SUM(tc.amount) as occurences\
 	FROM item as i, transcaction as t, customer as c, contains as tc, category as cat\
 	WHERE c.card_id ="+ id + " && t.card_id=c.card_id && tc.transcaction_id = t.id && tc.barcode = i.Barcode && i.category_id = cat.category_id\
 	GROUP BY i.Barcode ORDER BY SUM(tc.amount) desc LIMIT 10 ";
@@ -309,7 +343,7 @@ router.post('/customerfavourite', function (req, res) {
 router.post('/getsuperitems', function (req, res) {
 	let id = req.query.id;
 	let sql =
-		'SELECT i.Barcode,d.name,i.signature_item,i.current_price,c.self,c.aisle FROM item as i, carries as c, category as d  WHERE c.store_id= ' +
+		'SELECT i.name ,i.Barcode,d.name as catname,i.signature_item,i.current_price,c.self,c.aisle FROM item as i, carries as c, category as d  WHERE c.store_id= ' +
 		id +
 		' && c.barcode = i.Barcode && d.category_id = i.category_id';
 
@@ -498,7 +532,15 @@ router.get('/randompricehistory', function (req, res) {
 	res.send("DONE")
 })
 
-let id = 200;
+router.get('/itemnames', function (req, res) {
+	let post = "UPDATE item SET name = substring(MD5(RAND()),1,8)";
+	db.query(post, function (err, result) {
+		if (err) throw err;
+		res.sendStatus(200);
+	})
+})
+
+let tid = 400;
 
 router.get('/addtranscactionrandom', function (req, res) {
 	var payment_types = [
@@ -530,7 +572,7 @@ router.get('/addtranscactionrandom', function (req, res) {
 				if (err3) {
 					res.send(err3)
 				}
-				id++;
+				tid++;
 				db.query("SELECT Barcode FROM item", function (errr, data) {
 					if (errr) {
 						res.send(errr);
@@ -540,7 +582,7 @@ router.get('/addtranscactionrandom', function (req, res) {
 						let barcodet = barcodes[Math.floor(Math.random() * barcodes.length)]["Barcode"];
 						let amountt = Math.floor(Math.random() * 10 + 1);
 						var obj2 = {
-							transcaction_id: id,
+							transcaction_id: tid,
 							barcode: barcodet,
 							amount: amountt
 						}
@@ -604,7 +646,7 @@ router.post('/addsuperitem', function (req, res) {
 		aisle: req.body.aisle
 	};
 	let sql2 =
-		'SELECT i.Barcode,d.name,i.signature_item,i.current_price,c.self,c.aisle \
+		'SELECT i.name, i.Barcode,d.name as catname,i.signature_item,i.current_price,c.self,c.aisle \
                 FROM item as i, carries as c, category as d  \
                 WHERE c.store_id= ' +
 		id +
@@ -701,6 +743,79 @@ router.post('/deletesuper', (req, res) => {
 		res.send(result);
 	});
 });
+
+router.post('/popularspots', function (req, res) {
+	let id = req.query.id;
+	let post = "SELECT c.aisle,c.self, COUNT(IF(c.aisle IS NOT NULL AND c.self IS NOT NULL, 1, NULL)) AS p  FROM (carries as c JOIN contains as tc JOIN transcaction as t ON t.id = tc.transcaction_id && tc.barcode = c.barcode) WHERE t.store_id = " + id + " GROUP BY c.aisle,c.self ORDER by p DESC LIMIT 10";
+	db.query(post, function (err, result) {
+		if (err) {
+			console.log(err);
+			res.send({ success: false, msg: err.sqlMessage })
+		} else {
+			res.send({ success: true, dat: result });
+		}
+
+	})
+})
+
+router.post('/signaturetrust', function (req, res) {
+	let id = req.query.id;
+	let post = "SELECT ic.name,(SUM(i.signature_item)/(SUM(c.amount))*100) AS perc FROM (item as i JOIN contains as c JOIN category AS ic ON c.barcode = i.Barcode && ic.category_id = i.category_id), transcaction as t WHERE t.store_id = " + id + " &&  c.transcaction_id = t.id GROUP BY i.category_id"
+	db.query(post, function (err, result) {
+		if (err) {
+			console.log(err);
+			res.send({ success: false, msg: err.sqlMessage })
+		} else {
+			res.send({ success: true, dat: result });
+		}
+	})
+})
+
+router.post('/moneyspend', function (req, res) {
+	let id = req.query.id;
+	let post = "SELECT  DATE_FORMAT(t.date,'%H:00') as time,SUM(t.total_price)/COUNT(*) as p FROM transcaction as t WHERE t.store_id = " + id + "  GROUP BY time ORDER BY time ASC";
+	db.query(post, function (err, result) {
+		if (err) {
+			console.log(err);
+			res.send({ success: false, msg: err.sqlMessage })
+		} else {
+			res.send({ success: true, dat: result });
+		}
+	})
+})
+
+router.post('/agetimesuper', function (req, res) {
+	let id = req.query.id;
+	let post = "SELECT CASE  WHEN YEAR(CURRENT_DATE()) - YEAR(c.birth_date) <= 18 THEN '18 or less'\
+		WHEN YEAR(CURRENT_DATE()) - YEAR(c.birth_date) < 40 THEN '19-40'\
+		WHEN YEAR(CURRENT_DATE()) - YEAR(c.birth_date) < 70 THEN '40 plus' END\
+	as age, DATE_FORMAT(t.date,'%H:00') as time, COUNT(*)/(SELECT COUNT(*) FROM transcaction as t1 WHERE DATE_FORMAT(t1.date,'%H:00') = time && t1.store_id = "+ id + " )*100 as visits  FROM (customer as c JOIN transcaction as t ON t.card_id = c.card_id) WHERE t.store_id = " + id + " GROUP BY age,time\
+	ORDER BY time ASC , age	ASC"
+	db.query(post, function (err, result) {
+		if (err) {
+			console.log(err);
+			res.send({ success: false, msg: err.sqlMessage })
+		} else {
+			res.send({ success: true, dat: result });
+		}
+	})
+})
+
+router.post('/popularpairs', function (req, res) {
+	let id = req.query.id;
+	let post = "SELECT i1.name as name1,i2.name as name2,COUNT(c1.barcode) AS weight FROM\
+	(contains as c1 JOIN contains as c2 JOIN item as i1 JOIN item as i2 ON c1.barcode<c2.barcode && i1.Barcode = c1.barcode && i2.Barcode = c2.barcode ),\
+	transcaction AS t  WHERE t.store_id = "+ id + " && c2.transcaction_id = t.id  &&  c1.transcaction_id = c2.transcaction_id \
+	GROUP BY c1.barcode,c2.barcode  ORDER BY weight  DESC LIMIT 10"
+	db.query(post, function (err, result) {
+		if (err) {
+			console.log(err);
+			res.send({ success: false, msg: err.sqlMessage })
+		} else {
+			res.send({ success: true, dat: result });
+		}
+	})
+})
 
 router.post('/getsupersingle', (req, res) => {
 	let id = req.query.id;
