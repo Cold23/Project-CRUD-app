@@ -43,10 +43,6 @@ router.get('/items', function (req, res) {
 	res.sendFile(__dirname + '/client/itemspage.html');
 })
 
-router.get('/transcaction', function (req, res) {
-	res.sendFile(__dirname + '/client/viewtranscaction.html');
-})
-
 router.get('/customerdetailsview', function (req, res) {
 	res.sendFile(__dirname + '/client/customerdetailsview.html')
 })
@@ -121,7 +117,7 @@ router.post('/getallcustomers', function (req, res) {
 
 router.post('/customersupermarkets', function (req, res) {
 	let id = req.query.id;
-	let post = 'SELECT s.id,s.square_meters,s.days_open,s.times,CONCAT(s.street_name," ",s.street_number," ",s.city," ",s.state," ",s.zipcode) AS adrress, s.phone_number FROM supermarkets AS s, transcaction AS t, customer AS c \
+	let post = 'SELECT DISTINCT s.id,s.square_meters,s.days_open,s.times,CONCAT(s.street_name," ",s.street_number," ",s.city," ",s.state," ",s.zipcode) AS adrress, s.phone_number FROM supermarkets AS s, transcaction AS t, customer AS c \
 	WHERE t.store_id = s.id && t.card_id = c.card_id && c.card_id ='+ id
 	db.query(post, function (err, result) {
 		if (err) {
@@ -148,8 +144,8 @@ router.post('/getcustomervisittimes', function (req, res) {
 })
 
 router.post('/customermeanweek', function (req, res) {
-	let id = req.query.id;
-	let post = 'SELECT WEEK(date) AS week, COUNT(card_id)/7 AS average FROM transcaction  WHERE card_id =' + id + ' GROUP by week ORDER BY week ASC'
+	let id = req.query.id
+	let post = `SELECT CASE WHEN YEAR(date) = YEAR(CURRENT_DATE) THEN WEEK(date) - WEEK(CURRENT_DATE) WHEN YEAR(date) < YEAR(CURRENT_DATE) THEN WEEK(date) END AS week ,YEAR(date) AS year, COUNT(card_id)/7 AS average FROM transcaction  WHERE card_id = ${id} GROUP by week,year ORDER BY year ASC, week ASC`
 	db.query(post, function (err, result) {
 		if (err) throw err;
 		res.send(result);
@@ -158,7 +154,7 @@ router.post('/customermeanweek', function (req, res) {
 
 router.post('/customermeanmonth', function (req, res) {
 	let id = req.query.id;
-	let post = 'SELECT MONTH(date) AS month, COUNT(card_id)/30 AS average FROM transcaction  WHERE card_id =' + id + ' GROUP by month ORDER BY month ASC'
+	let post = `SELECT MONTH(date) AS month,YEAR(date) AS year, COUNT(card_id)/30 AS average FROM transcaction  WHERE card_id = ${id} GROUP by month,year ORDER BY year ASC, month ASC`
 	db.query(post, function (err, result) {
 		if (err) throw err;
 		res.send(result);
@@ -354,7 +350,7 @@ router.post('/getsuperitems', function (req, res) {
 });
 
 router.post('/getsuperitemsall', function (req, res) {
-	db.query('SELECT Barcode FROM item', function (err, result) {
+	db.query('SELECT Barcode, name FROM item', function (err, result) {
 		if (err) console.log(err);
 		res.send(result);
 	});
@@ -540,7 +536,7 @@ router.get('/itemnames', function (req, res) {
 	})
 })
 
-let tid = 400;
+let tid = 1000;
 
 router.get('/addtranscactionrandom', function (req, res) {
 	var payment_types = [
@@ -552,7 +548,7 @@ router.get('/addtranscactionrandom', function (req, res) {
 	var obj = {
 		payment_method: payment_types[Math.floor(Math.random() * 3)],
 		card_id: "",
-		date: randomDate(new Date(1990, 0, 1), new Date()) + " " + randomTime(),
+		date: randomDate(new Date(2018, 0, 1), new Date()) + " " + randomTime(),
 		store_id: "",
 		total_price: 0
 	}
@@ -593,18 +589,15 @@ router.get('/addtranscactionrandom', function (req, res) {
 								self: Math.floor(Math.random() * 50),
 								aisle: Math.floor(Math.random() * 50)
 							}
-							db.query('INSERT IGNORE INTO carries set ?', post, function (k) {
+							db.query('INSERT IGNORE INTO carries set ?', post, function () {
 
 							})
 						})
-
 					}
 				})
-
 			})
 		})
 	})
-	res.end();
 })
 
 function randomTime() {
@@ -679,7 +672,7 @@ router.post('/addsuperitem', function (req, res) {
 	db.query('INSERT INTO carries SET ?', post, function (err) {
 		if (err) {
 			console.log(err);
-			res.send({ code: err.code, success: false });
+			res.send({ code: err.sqlMessage, success: false });
 		} else {
 			db.query(sql2, function (e, r) {
 				if (e) {
@@ -789,6 +782,65 @@ router.post('/signaturetrust', function (req, res) {
 			res.send({ success: true, dat: result });
 		}
 	})
+})
+
+router.post('/filtertranscaction', function (req, res) {
+	let post = "SELECT * FROM transcaction WHERE ";
+	var datekeys = ["YEAR(date)", "MONTH(date)", "DAY(date)"];
+	var signs = ["<", ">"];
+	let keys = Object.keys(req.body);
+	let values = Object.values(req.body);
+	let sign = [];
+	for (let i = 0; i < keys.length; i++) {
+		let tempsign = values[i].substr(0, 1);
+		var currvalue;
+		signs.forEach(element => {
+			if (tempsign == element) {
+				sign.push(element);
+			}
+		});
+		if (sign.length == i) {
+			sign.push("=")
+			currvalue = values[i]
+		} else {
+			currvalue = values[i].substr(1);
+		}
+		if (keys[i] == "payment_method") {
+			currvalue = "'" + currvalue + "'"
+		}
+		if (keys[i] == "date") {
+			var datesplit = values[i].split("-");
+			for (let j = 0; j < datesplit.length; j++) {
+				if (sign[i] == "=") {
+					currvalue = datesplit[j]
+				} else {
+					currvalue = datesplit[j].substr(1);
+				}
+				post += datekeys[j] + sign[i] + currvalue;
+				if (j !== datesplit.length - 1) {
+					post += " && "
+				}
+			}
+			if (i !== keys.length - 1) {
+				post += " && ";
+			}
+			continue;
+		}
+		post = post + keys[i] + sign[i] + currvalue;
+		if (i !== keys.length - 1) {
+			post += " && ";
+		}
+	}
+	console.log(post)
+	db.query(post, function (err, result) {
+		if (err) {
+			console.log(err);
+			res.send({ success: false, msg: err.sqlMessage })
+		} else {
+			res.send({ success: true, dat: result });
+		}
+	})
+
 })
 
 router.post('/moneyspend', function (req, res) {

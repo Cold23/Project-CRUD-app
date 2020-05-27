@@ -7,6 +7,7 @@
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="Crudapp.css" rel="stylesheet">
 
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -21,41 +22,73 @@
 
 <body>
 
-    <h2 class="text-center">All Transcactions</h2>
-    <div class="container-fluid">
-        <table id="sqltable" , class="table table-bordered table-hover table-dark table-striped">
-            <thead class="text-center">
-                <tr id="filter_table">
-                    <th scope="col" class='id'>Transcaction ID
-                        <input type="text" class='id' placeholder="Filter">
-                    </th>
-                    <th scope="col" class="payment_method">Payment Method
-                        <input type="text" class="payment_method" placeholder="Filter">
-                    </th>
-                    <th scope="col" class="card_id">Customer Card ID
-                        <input type="text" class="card_id" placeholder="Filter">
-                    </th>
-                    <th scope="col" class="date">Date of transcaction
-                        <input type="text" class="date" placeholder="Filter">
-                    </th>
-                    <th scope="col" class="store_id">Store ID
-                        <input type="text" class="store_id" placeholder="Filter">
-                    </th>
-                    <th scope="col" class="total_price">Total Price
-                        <input type="text" class="total_price" placeholder="Filter">
-                    </th>
-                    <th scope="col" class="total_pieces">Total Pieces Bought
-                        <input type="text" class="total_pieces" placeholder="Filter">
-                    </th>
-                    <th scope="col" class="align-middle">Action</th>
-                </tr>
-            </thead>
-            <tbody class="text-center" id="transcactionbody">
 
-            </tbody>
-        </table>
+    <div class=" background">
+        <div class="spinner"></div>
+
+        <h2 class="text-center">All Transcactions</h2>
+        <div class="container-fluid">
+            <table id="sqltable" , class="table table-bordered table-hover table-dark table-striped">
+                <thead class="text-center">
+                    <tr id="filter_table">
+                        <form id="filterform">
+                            <th scope="col" class='id'>Transcaction ID
+
+                            </th>
+                            <th scope="col" class="payment_method">Payment Method
+                                <input type="text" name="payment_method" class="payment_method"
+                                    placeholder="cash/credit/debit">
+                            </th>
+                            <th scope="col" class="card_id">Customer Card ID
+
+                            </th>
+                            <th scope="col" class="date">Date of transcaction
+                                <input type="text" name="date" class="date" placeholder="YYYY_MM_DD">
+                            </th>
+                            <th scope="col" class="store_id">Store ID
+                                <input type="number" name="store_id" class="total_price" placeholder="57">
+                            </th>
+                            <th scope="col" class="total_price">Total Price
+                                <input type="text" name="total_price" class="total_price" placeholder=">/< number">
+                            </th>
+                            <th scope="col" class="total_pieces">Total Pieces Bought
+                                <input type="text" name="total_pieces" class="total_pieces" placeholder=">/< number">
+                            </th>
+                            <th scope="col" class="align-middle">Action
+                                <button class="btn btn-outline-primary btn-sm" id="filter" title="Filter Results"><i
+                                        class="fa fa-filter"></i></button>
+                            </th>
+                        </form>
+                    </tr>
+                </thead>
+                <tbody class="text-center" id="transcactionbody">
+
+                </tbody>
+            </table>
+        </div>
     </div>
+    <div class="popup">
+        <h2 class="text-center">Items Bought</h2>
+        <div class="container">
+            <a class="closemodal" href="#"><i class="fa fa-times"></i></a>
+            <table id="sqltable" , class="table table-bordered table-dark table-striped">
+                <thead class="text-center">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Barcode</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Signature Item</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Amount Bought</th>
 
+                    </tr>
+                </thead>
+                <tbody class="text-center" id="itembody">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 
 </html>

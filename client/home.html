@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
+    <link href="Crudapp.css" rel="stylesheet">
+
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -21,125 +23,290 @@
 
 <body>
 
+    </div>
+    <div class="background">
+        <h2 class="text-center bg-light">List of Supermarkets
+        </h2>
+        <div class="container-fluid">
+            <div class="table-responsive text-nowarp">
+                <table id="sqltable" , class="table table-dark table-striped table-hover">
+                    <thead class="text-center">
+                        <a id="addnew" href=""> <i class="fa fa-plus-circle fa-2x"> Add</i> </a>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Square Meters</th>
+                            <th scope="col">Open On</th>
+                            <th scope="col">Hours</th>
+                            <th scope="col">Adrress </th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center" id="storebody">
 
-    <!-- form to add -->
-    <h4 class="text-center bg-light">Insert New Supermarket
-        <label class="collapsebutton btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#form"
-            aria-expanded="false" aria-controls="form">
-            <i class="fa fa-eye"></i>
-        </label>
-    </h4>
-    <div class="container">
-        <form id="form" , class="form-horizontal collapse">
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="col col-form-label" , for="id">Supermarket Id</label>
-                    <div class="col">
-                        <input type="number" , class="form-control" , name="id" , id="id" , placeholder="0">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col col-form-label" , for="square_meters">Square Meters</label>
-                    <div class="col">
-                        <input type="text" , class="form-control " , name="square_meters" , placeholder="120">
-                    </div>
-                </div>
+                    </tbody>
+                </table>
             </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="col col-form-label" , for="open">Open</label>
-                    <div class="col">
-                        <select class="custom-select " , name="open" , aria-placeholder="everyday">
-                            <option value="everyday">everyday</option>
-                            <option value="daily">daily</option>
-                            <option value="dailysaturday">dailysaturday</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col col-form-label" , for="opentime">Open Time</label>
-                    <div class="col">
-                        <input type="time" , class="form-control" , name="opentime">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col col-form-label" , for="closetime">Close Time</label>
-                    <div class="col">
-                        <input type="time" , class="form-control" , name="closetime">
-                    </div>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="col col-form-label" , for="streetname">Street Name</label>
-                    <div class="col">
-                        <input type="text" , class="form-control" , name="streetname" , placeholder="Name">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col col-form-label" , for="streetno">Street Number</label>
-                    <div class="col">
-                        <input type="text" , class="form-control" , name="streetno" , placeholder="number">
-                    </div>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="col col-form-label" , for="city">City</label>
-                    <div class="col">
-                        <input type="text" , class="form-control" , name="city" , placeholder="city">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col col-form-label" , for="state">State</label>
-                    <div class="col">
-                        <input type="text" , class="form-control" , name="state" , placeholder="state">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col col-form-label" , for="zip">Zipcode</label>
-                    <div class="col">
-                        <input type="number" , class="form-control" , name="zip" , placeholder="15122">
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col col-form-label" , for="phone" ,>Phone</label>
-                <div class="col">
-                    <input type="number" , class="form-control" , name="phone" , placeholder="123456789">
-                </div>
-            </div>
-            <div class="col-sm-offset-2 col">
-                <input type="submit" , class="btn btn-primary" id="create">
-            </div>
-        </form>
-    </div><br>
-
-    <h2 class="text-center bg-light">List of Supermarkets
-        <label class="collapsebutton btn btn-outline-primary" type="button" data-toggle="collapse"
-            data-target="#collapse" aria-expanded="false" aria-controls="collapse">
-            <i class="fa fa-eye-slash"></i>
-        </label>
-    </h2>
-    <div class="container-fluid">
-        <div class="table-responsive text-nowarp collapse show" id="collapse">
-            <table id="sqltable" , class="table table-dark table-striped table-hover">
-                <thead class="text-center">
-                    <tr>
-                        <th scope="col">Id</th>
-                        <th scope="col">Square Meters</th>
-                        <th scope="col">Open On</th>
-                        <th scope="col">Hours</th>
-                        <th scope="col">Adrress </th>
-                        <th scope="col">Phone</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="text-center" id="storebody">
-
-                </tbody>
-            </table>
         </div>
+    </div>
+
+    <!-- add modal -->
+    <div class="popup" id="addmodal">
+        <h4 class="text-center">Insert New Supermarket</h4>
+        <div class="container">
+            <a class="closemodal" href="#"><i class="fa fa-times"></i></a>
+            <form id="createform" class="form-horizontal">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="id">Supermarket Id</label>
+                        <div class="col">
+                            <input type="number" , class="form-control" , name="id" , id="id" , placeholder="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="square_meters">Square Meters</label>
+                        <div class="col">
+                            <input type="text" , class="form-control " , name="square_meters" , placeholder="120">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="open">Open</label>
+                        <div class="col">
+                            <select class="custom-select " , name="open" , aria-placeholder="everyday">
+                                <option value="everyday">everyday</option>
+                                <option value="daily">daily</option>
+                                <option value="dailysaturday">dailysaturday</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="opentime">Open Time</label>
+                        <div class="col">
+                            <input type="time" , class="form-control" , name="opentime">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="closetime">Close Time</label>
+                        <div class="col">
+                            <input type="time" , class="form-control" , name="closetime">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="streetname">Street Name</label>
+                        <div class="col">
+                            <input type="text" , class="form-control" , name="streetname" , placeholder="Name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="streetno">Street Number</label>
+                        <div class="col">
+                            <input type="text" , class="form-control" , name="streetno" , placeholder="number">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="city">City</label>
+                        <div class="col">
+                            <input type="text" , class="form-control" , name="city" , placeholder="city">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="state">State</label>
+                        <div class="col">
+                            <input type="text" , class="form-control" , name="state" , placeholder="state">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="zip">Zipcode</label>
+                        <div class="col">
+                            <input type="number" , class="form-control" , name="zip" , placeholder="15122">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="phone" ,>Phone</label>
+                        <div class="col">
+                            <input type="number" , class="form-control" , name="phone" , placeholder="123456789">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-offset-2 col">
+                    <input type="submit" , class="btn btn-orange" id="create">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="popup" id="viewmodal">
+        <a class="closemodal" href="#"><i class="fa fa-times"></i></a>
+        <div class="sidenav">
+            <a href="#" class="" aria-controls="edit">Change Values</a>
+            <a href="#" class="active" aria-controls="items">Items</a>
+            <a href="#" class="" aria-controls="categories">Categories</a>
+            <a href="#">Transcaction</a>
+            <a href="#">Popular Pairs</a>
+            <a href="#">Popular Spots</a>
+            <a href="#">Active Times</a>
+        </div>
+        <div class="modal-body" id="edit">
+            <div class="container">
+                <form id="editform" class="form-horizontal">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="id">Supermarket Id</label>
+                            <div class="col">
+                                <input type="number" , class="form-control" , name="id" , id="id" , placeholder="0">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="square_meters">Square Meters</label>
+                            <div class="col">
+                                <input type="text" , class="form-control " , name="square_meters" , placeholder="120">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="open">Open</label>
+                            <div class="col">
+                                <select class="custom-select " , name="open" , aria-placeholder="everyday">
+                                    <option value="everyday">everyday</option>
+                                    <option value="daily">daily</option>
+                                    <option value="dailysaturday">dailysaturday</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="opentime">Open Time</label>
+                            <div class="col">
+                                <input type="time" , class="form-control" , name="opentime">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="closetime">Close Time</label>
+                            <div class="col">
+                                <input type="time" , class="form-control" , name="closetime">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="streetname">Street Name</label>
+                            <div class="col">
+                                <input type="text" , class="form-control" , name="streetname" , placeholder="Name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="streetno">Street Number</label>
+                            <div class="col">
+                                <input type="text" , class="form-control" , name="streetno" , placeholder="number">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="city">City</label>
+                            <div class="col">
+                                <input type="text" , class="form-control" , name="city" , placeholder="city">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="state">State</label>
+                            <div class="col">
+                                <input type="text" , class="form-control" , name="state" , placeholder="state">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="zip">Zipcode</label>
+                            <div class="col">
+                                <input type="number" , class="form-control" , name="zip" , placeholder="15122">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="phone" ,>Phone</label>
+                            <div class="col">
+                                <input type="number" , class="form-control" , name="phone" , placeholder="123456789">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-offset-2 col">
+                        <input type="submit" , class="btn btn-orange" id="create">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-body active" id="items">
+            <div class="container">
+                <h3>Add existing item to store</h3>
+                <form id='itemform' , class="form-horizontal">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="square_meters">Name - Barcode</label>
+                            <div class="col">
+                                <select class="custom-select mr-sm-2" , name="barcode" , id="foritems">
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="square_meters">Shelf #</label>
+                            <div class="col">
+                                <input type="number" , class="form-control " , name="self" , placeholder="5">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="square_meters">Aisle #</label>
+                            <div class="col">
+                                <input type="number" , class="form-control " , name="aisle" , placeholder="5">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <div class="col col-sm-offset-5">
+                            <input type="submit" , class="btn btn-orange btn-sm" id="additem">
+                        </div>
+                    </div>
+                </form>
+                <table class="sqltable table table-dark table-striped table-hover">
+                    <caption class="text-center">List of Items</caption>
+                    <thead class="text-center">
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Barcode</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Signature Item</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Shelf</th>
+                            <th scope="col">Aisle</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center" id="itembody">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-body" id="categories">
+            <h3 class="text-center"> Provides Categories</h3>
+            <div class="container ">
+                <table class="sqltable table table-dark table-striped table-hover">
+                    <caption class="text-center">List of Categories</caption>
+                    <thead class="text-center">
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Name</th>
+
+                        </tr>
+                    </thead>
+                    <tbody class="text-center" id="categorybody">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    </div>
+
 
 </body>
 

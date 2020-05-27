@@ -46,7 +46,12 @@ $(document).ready(function () {
     $.post('/customermeanweek?id=' + id, function (data) {
         if (data) {
             $.each(data, function (index, value) {
-                weeklabels.push(value.week);
+                if (new Date().getFullYear() == value.year) {
+                    weeklabels.push(`${-value.week} weeks ago`);
+                } else {
+                    weeklabels.push("week " + value.week + ' ' + value.year);
+                }
+
                 weekdata.push(value.average);
             })
             var BarChart2 = new Chart(weekctx, {
@@ -74,7 +79,7 @@ $(document).ready(function () {
     $.post('/customermeanmonth?id=' + id, function (data) {
         if (data) {
             $.each(data, function (index, value) {
-                monthlabels.push(monthNames[value.month - 1]);
+                monthlabels.push(`${monthNames[value.month - 1]} ${value.year}`);
                 monthdata.push(value.average);
             })
             var BarChart3 = new Chart(monthctx, {

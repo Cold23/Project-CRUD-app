@@ -50,7 +50,20 @@ $(document).ready(function () {
             })
         }
     })
+    $('#addnew').click(function (e) {
+        e.preventDefault();
+        blur('#addmodal');
+    })
+    $('.closemodal').click(function (e) {
+        e.preventDefault();
+        blur('#addmodal');
+    })
 });
+
+function blur(name) {
+    $('.background').toggleClass('blurred');
+    $(name).toggleClass('active');
+}
 
 function createItems(data) {
     let markup =

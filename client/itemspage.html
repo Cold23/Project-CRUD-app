@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
+    <link href="Crudapp.css" rel="stylesheet">
+
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -21,79 +23,78 @@
 
 <body>
 
-    <!-- form to add -->
-    <h3 class="text-center bg-light">Insert New Item
-        <label class="collapsebutton btn btn-outline-primary" type="button" data-toggle="collapse"
-            data-target="#addform" aria-expanded="false" aria-controls="addform">
-            <i class="fa fa-eye"></i>
-        </label>
-    </h3>
-    <div class="container">
-        <form id="addform" , class="form-horizontal collapse">
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="col col-form-label" , for="name">Item Name</label>
-                    <div class="col">
-                        <input type="text" , class="form-control" , name="name" , placeholder="Spaghetti">
+    <div class="background">
+        <h2 class="text-center">All Items</h2>
+        <div class="container-fluid">
+            <a id="addnew" href="#"> <i class="fa fa-plus-circle fa-2x"> Add</i> </a>
+            <table id="sqltable" , class="table table-bordered table-dark table-striped">
+                <thead class="text-center">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Barcode</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Signature Item</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Action</th>
+
+                    </tr>
+                </thead>
+                <tbody class="text-center" id="itembody">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="popup" id="addmodal">
+        <h3 class="text-center">Insert New Item</h3>
+        <div class="container">
+            <a class="closemodal" href="#"><i class="fa fa-times"></i></a>
+            <form id="addform" , class="form-horizontal">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="name">Item Name</label>
+                        <div class="col">
+                            <input type="text" , class="form-control" , name="name" , placeholder="Spaghetti">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="Barcode">Barcode</label>
+                        <div class="col">
+                            <input type="number" , class="form-control " , name="Barcode" , placeholder="88837454">
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col col-form-label" , for="Barcode">Barcode</label>
-                    <div class="col">
-                        <input type="number" , class="form-control " , name="Barcode" , placeholder="88837454">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="category_id">Category</label>
+                        <div class="col">
+                            <select id="category_options" class="custom-select" , name="category_id">
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="signature_item">Signature Item</label>
+                        <div class="col">
+                            <select id="category_select" class="custom-select " , name="signature_item">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="current_price">Current Price</label>
+                        <div class="col">
+                            <input type="number" , class="form-control" , name="current_price" , placeholder="23.56">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="col col-form-label" , for="category_id">Category</label>
-                    <div class="col">
-                        <select id="category_options" class="custom-select" , name="category_id">
-
-                        </select>
-                    </div>
+                <div class="col-sm-offset-2 col">
+                    <input type="submit" , class="btn btn-orange" id="create">
                 </div>
-                <div class="form-group">
-                    <label class="col col-form-label" , for="signature_item">Signature Item</label>
-                    <div class="col">
-                        <select id="category_select" class="custom-select " , name="signature_item">
-                            <option value="1">Yes</option>
-                            <option value="0">No</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col col-form-label" , for="current_price">Current Price</label>
-                    <div class="col">
-                        <input type="number" , class="form-control" , name="current_price" , placeholder="23.56">
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-offset-2 col">
-                <input type="submit" , class="btn btn-primary" id="create">
-            </div>
-        </form>
-    </div><br>
-
-
-    <h2 class="text-center">All Items </h2>
-    <div class="container">
-        <table id="sqltable" , class="table table-bordered table-dark table-striped">
-            <thead class="text-center">
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Barcode</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Signature Item</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Action</th>
-
-                </tr>
-            </thead>
-            <tbody class="text-center" id="itembody">
-
-            </tbody>
-        </table>
+            </form>
+        </div>
     </div>
 
 </body>

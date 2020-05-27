@@ -36,7 +36,20 @@ $(document).ready(function () {
         var parent = $(this).closest('tr');
         window.location.href = '/viewcustomer?id=' + parent.data('id');
     })
+    $('#addnew').click(function (e) {
+        e.preventDefault();
+        blur('#addmodal');
+    })
+    $('.closemodal').click(function (e) {
+        e.preventDefault();
+        blur('#addmodal');
+    })
 });
+
+function blur(name) {
+    $('.background').toggleClass('blurred');
+    $(name).toggleClass('active');
+}
 
 function AddCustomer(data) {
     let markup =

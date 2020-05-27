@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
+    <link href="Crudapp.css" rel="stylesheet">
+
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -20,130 +22,137 @@
 
 <body>
     <!-- form to add -->
-    <div class="container">
-        <h2 class="text-center">Insert New Customer</h2>
-        <form id="form" , class="form-horizontal">
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="col col-form-label" , for="card_id">Card ID</label>
-                    <div class="col">
-                        <input type="number" , class="form-control" , name="card_id" , id="id" , placeholder="0">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col col-form-label" , for="points">Card Points</label>
-                    <div class="col">
-                        <input type="number" , class="form-control " , name="points" , placeholder="120">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col col-form-label" , for="first_name">First Name</label>
-                    <div class="col">
-                        <input type="text" , class="form-control " , name="first_name" , placeholder="Jack">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col col-form-label" , for="last_name">Last Name</label>
-                    <div class="col">
-                        <input type="text" , class="form-control " , name="last_name" , placeholder="Hanma">
-                    </div>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="col col-form-label" , for="street_name">Street Name</label>
-                    <div class="col">
-                        <input type="text" , class="form-control" , name="street_name" , placeholder="Name">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col col-form-label" , for="street_number">Street Number</label>
-                    <div class="col">
-                        <input type="text" , class="form-control" , name="street_number" , placeholder="number">
-                    </div>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="col col-form-label" , for="city">City</label>
-                    <div class="col">
-                        <input type="text" , class="form-control" , name="city" , placeholder="city">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col col-form-label" , for="state">State</label>
-                    <div class="col">
-                        <input type="text" , class="form-control" , name="state" , placeholder="state">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col col-form-label" , for="zipcode">Zipcode</label>
-                    <div class="col">
-                        <input type="number" , class="form-control" , name="zipcode" , placeholder="15122">
-                    </div>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="col col-form-label" , for="birth_date" ,>Birth Date</label>
-                    <div class="col">
-                        <input type="date" , class="form-control" , name="birth_date" , placeholder="">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col col-form-label" , for="married" ,>Married</label>
-                    <div class="col">
-                        <select class="custom-select" , name="married">
+    <div class="background">
+        <h2 class="text-center">All Customers</h2>
 
-                            <option value="0">No</option>
-                            <option value="1">Yes</option>
+        <div class="container-fluid">
+            <a id="addnew" href="#"> <i class="fa fa-plus-circle fa-2x"> Add</i> </a>
+            <table id="sqltable" , class="table table-bordered table-dark table-hover table-striped">
+                <thead class="text-center">
+                    <tr>
+                        <th scope="col">Card ID</th>
+                        <th scope="col">Points</th>
+                        <th scope="col">Full Name</th>
+                        <th scope="col">Adrress</th>
+                        <th scope="col">Birth Date</th>
+                        <th scope="col">Married</th>
+                        <th scope="col"># Of Children</th>
+                        <th scope="col">Has Pets(s)</th>
+                        <th scope="col">Action</th>
 
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col col-form-label" , for="children" ,># Of Children</label>
-                    <div class="col">
-                        <input type="number" , class="form-control" , name="children" , placeholder="0">
-                    </div>
-                </div>
-                <div class="form-select">
-                    <label class="col col-form-label" , for="pets" ,>Has pet(s)</label>
-                    <div class="col">
-                        <select class="custom-select" , name="pets">
-                            <option value="0">No</option>
-                            <option value="1">Yes</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-offset-2 col-sm-10">
-                <button id='create' class="btn btn-outline-primary">Add</button>
-            </div>
-        </form>
+                    </tr>
+                </thead>
+                <tbody class="text-center" id="customerbody">
+
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <h2 class="text-center">All Customers</h2>
-    <div class="container-fluid">
-        <table id="sqltable" , class="table table-bordered table-dark table-hover table-striped">
-            <thead class="text-center">
-                <tr>
-                    <th scope="col">Card ID</th>
-                    <th scope="col">Points</th>
-                    <th scope="col">Full Name</th>
-                    <th scope="col">Adrress</th>
-                    <th scope="col">Birth Date</th>
-                    <th scope="col">Married</th>
-                    <th scope="col"># Of Children</th>
-                    <th scope="col">Has Pets(s)</th>
-                    <th scope="col">Action</th>
+    <div class="popup" id="addmodal">
+        <div class="container">
+            <a class="closemodal" href="#"><i class="fa fa-times"></i></a>
+            <h2 class="text-center">Insert New Customer</h2>
+            <form id="form" , class="form-horizontal">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="card_id">Card ID</label>
+                        <div class="col">
+                            <input type="number" , class="form-control" , name="card_id" , id="id" , placeholder="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="points">Card Points</label>
+                        <div class="col">
+                            <input type="number" , class="form-control " , name="points" , placeholder="120">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="first_name">First Name</label>
+                        <div class="col">
+                            <input type="text" , class="form-control " , name="first_name" , placeholder="Jack">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="last_name">Last Name</label>
+                        <div class="col">
+                            <input type="text" , class="form-control " , name="last_name" , placeholder="Hanma">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="street_name">Street Name</label>
+                        <div class="col">
+                            <input type="text" , class="form-control" , name="street_name" , placeholder="Name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="street_number">Street Number</label>
+                        <div class="col">
+                            <input type="text" , class="form-control" , name="street_number" , placeholder="number">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="city">City</label>
+                        <div class="col">
+                            <input type="text" , class="form-control" , name="city" , placeholder="city">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="state">State</label>
+                        <div class="col">
+                            <input type="text" , class="form-control" , name="state" , placeholder="state">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="zipcode">Zipcode</label>
+                        <div class="col">
+                            <input type="number" , class="form-control" , name="zipcode" , placeholder="15122">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="birth_date" ,>Birth Date</label>
+                        <div class="col">
+                            <input type="date" , class="form-control" , name="birth_date" , placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="married" ,>Married</label>
+                        <div class="col">
+                            <select class="custom-select" , name="married">
 
-                </tr>
-            </thead>
-            <tbody class="text-center" id="customerbody">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
 
-            </tbody>
-        </table>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col col-form-label" , for="children" ,># Of Children</label>
+                        <div class="col">
+                            <input type="number" , class="form-control" , name="children" , placeholder="0">
+                        </div>
+                    </div>
+                    <div class="form-select">
+                        <label class="col col-form-label" , for="pets" ,>Has pet(s)</label>
+                        <div class="col">
+                            <select class="custom-select" , name="pets">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button id='create' class="btn btn-orange">Add</button>
+                </div>
+            </form>
+        </div>
     </div>
 
 

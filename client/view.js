@@ -7,7 +7,6 @@ $(document).ready(function () {
 			});
 		}
 	});
-
 	$('.sqltable').on('click', '#deleteitem', function () {
 		if (confirm('Remove item from store')) {
 			var parent = $(this).closest('tr');
@@ -120,7 +119,7 @@ $(document).ready(function () {
 });
 
 function AddItemOption(item) {
-	let post = '<option value=' + item.Barcode + '>' + item.Barcode + '</option>';
+	let post = `<option value = ${item.Barcode} > ${item.name} - ${item.Barcode} </option>`;
 	$('#foritems').append(post);
 }
 
