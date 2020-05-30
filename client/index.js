@@ -1,33 +1,49 @@
 $(document).ready(function () {
+	var barcode, sid;
+	$(`.spinner`).hide();
+	$(`.checkmark`).hide();
+	sid = new URLSearchParams(window.location.search).get('id');
+	if (sid !== null) {
+		loadViewModal(sid);
+	}
 	$('#create').click(function (event) {
 		event.preventDefault();
-		var obj = $('#createform').serialize();
-		$.post('/insert', obj, function (data, success) {
-			if (data) {
-				var dat = $('#createform').serializeObject()
-				NewShopRowFromForm(dat);
-				blur('#addmodal')
-				$('body, html').animate({ scrollTop: $("#super-" + dat.id).offset().top }, "slow");
-				$('#createform').trigger("reset");
-			} else {
-				alert('wrong/duplicate entry');
-			}
+		var obj1 = {};
+		$.each($('#createform').serializeArray(), function (index, value) {
+			if (value.value !== '') obj1[value.name] = value.value;
 		});
+		delete obj1['opentime'];
+		delete obj1['closetime'];
+		if ($('#time12').val() !== '' && $('#time22').val() !== '') {
+			obj1['times'] = $('#time12').val() + '-' + $('#time22').val();
+		}
+		if (!$.isEmptyObject(obj1)) {
+			$.post('/insert', obj1, function (data, success) {
+				if (data) {
+					NewShopRowFromForm(obj1);
+					blur('#addmodal')
+					$('body, html').animate({ scrollTop: $("#super-" + obj1.id).offset().top }, "slow");
+					$('#createform').trigger("reset");
+				} else {
+					alert('wrong/duplicate entry');
+				}
+			});
+		} else {
+			alert("Empty Values?")
+		}
+
 	});
 
 	$('#addnew').click(function (e) {
 		e.preventDefault();
 		blur('#addmodal');
 	})
-	$('.collapsebutton').click(function (event) {
-		$(this).children().toggleClass('fa-eye fa-eye-slash');
-	});
 	$.get('/getsuper', function (data, success) {
 		$.each(data, function (index, value) {
 			NewShopRowFromGet(value);
 		});
 	}).fail(function () { });
-	$('#sqltable').on('click', '#deleteshop', function () {
+	$('.sqltable').on('click', '.deleteshop', function () {
 		if (confirm('Delete this shop')) {
 			var parent = $(this).closest('tr');
 			$.post('/deletesuper', { id: parent.data('id') }, function (success) {
@@ -35,40 +51,115 @@ $(document).ready(function () {
 			});
 		}
 	});
-	$('#sqltable').on('click', '#viewshop', function () {
+	$('.sqltable').on('click', '.viewshop', function () {
 		var parent = $(this).closest('tr');
-		let id = $(parent).data('id');
-		window.history.replaceState(null, null, `?id=${id}`);
-		$.post(`/getsupersingle?id=${id}`, function (data, success) {
-			if (success) {
+		sid = $(parent).data('id');
+		window.history.replaceState(null, null, `?id=${sid}`);
+		loadViewModal(sid);
+	});
+
+	$('.sqltable').on('click', '.viewitem', function () {
+		$('.viewitem i').removeClass(`fa-eye-slash`);
+		$('.viewitem i').addClass(`fa-eye`);
+		if ($(this).hasClass(`active`)) {
+			$('#item-view').fadeOut();
+			$(this).removeClass('active')
+			return;
+		}
+
+		$(`.viewitem`).removeClass('active');
+		$(this).children('i').toggleClass('fa-eye fa-eye-slash')
+		$(this).addClass('active')
+		var parent = $(this).closest('tr');
+		barcode = parent.data('id')
+		window.history.replaceState(null, null, `?id=${sid}&barcode=${barcode}`);
+		$.get(`/getitem1?barcode=${barcode}&id=${sid}`, function (data) {
+			if (data) {
 				$.each(data, function (index, value) {
-					SetUpEditForm(value);
+					SetUpItemForm(value);
 				});
+			}
+		});
+		$.post('/getitemhistory?barcode=' + barcode, function (data, success) {
+			if (data) {
+				CreateHistory(data);
 			}
 		})
-		$.post('/getsuperitemsall', function (data, success) {
-			if (success) {
-				$.each(data, (index, value) => {
-					AddItemOption(value);
-				});
-			}
+		$('.modal-body').animate({ scrollTop: 0 }, "slow");
+		$('#item-view').fadeIn();
+
+	});
+
+	$('.sumbit').click(function (event) {
+		event.preventDefault();
+		var obj = {};
+		var butid = $(this).attr('id');
+		$.each($(this).parents('form:first').serializeArray(), function (index, value) {
+			if (value.value !== '') obj[value.name] = value.value;
 		});
-		$.post('/getsuperitems?id=' + id, function (data, success) {
-			if (success) {
-				createItems(data);
+		if (!!!+butid && !$.isEmptyObject(obj)) {
+			$.post('/updateshopitem?id=' + sid + '&barcode=' + barcode, obj, function (data, success) {
+				showCheckmark();
+				UpdateRowItem(obj, barcode, false);
+			})
+		} else if (!$.isEmptyObject(obj)) {
+			$.post('/updateitem?barcode=' + barcode, obj, function (data) {
+				if (data) {
+					obj[`catname`] = $('#forcategories option:selected').text();
+					$.post('/getitemhistory?barcode=' + barcode, function (data, success) {
+						if (data) {
+							CreateHistory(data);
+						}
+					})
+					showCheckmark();
+					UpdateRowItem(obj, barcode, true);
+				} else {
+					alert("Duplicate Barcode")
+				}
+			});
+		}
+
+	})
+
+	$.get('/getcategories', function (data, success) {
+		if (success) {
+			$.each(data, (index, value) => {
+				AddCategoryOption(value);
+			});
+		}
+	});
+	$('.sqltable').on('click', '.viewtranscaction', function () {
+		$('.viewtranscaction i').removeClass(`fa-eye-slash`);
+		$('.viewtranscaction i').addClass(`fa-eye`);
+		if ($(this).hasClass(`active`)) {
+			$('#tr-items').fadeOut();
+			$(this).removeClass('active')
+			return;
+		}
+		$(`.viewtranscaction`).removeClass('active');
+		$(this).children('i').toggleClass('fa-eye fa-eye-slash')
+		$(this).addClass('active')
+		var parent = $(this).closest('tr');
+		var trid = parent.data('id')
+		$('#trid').html(trid)
+		$.post('/gettranscactionitems?id=' + trid, function (data) {
+			if (data.success) {
+				createItemstr(data.dat);
+				$('#tr-items').fadeIn();
+				$('.modal-body, html').animate({ scrollTop: 0 }, "slow");
+			} else {
+				alert(data.msg)
 			}
-		});
-		$.post('/getcategory?id=' + id, function (data, success) {
-			if (success) {
-				createCategory(data);
-			}
-		});
-		blur("#viewmodal");
+
+		})
 	});
 	$('.closemodal').click(function (e) {
 		e.preventDefault();
+		window.history.replaceState(null, null, "?");
 		var parent = $(this).closest('.popup');
 		blur(parent);
+		$(`#item-view`).fadeOut();
+		$(`#tr-items`).fadeOut();
 	})
 	$('#additem').click(function (event) {
 		event.preventDefault();
@@ -87,7 +178,7 @@ $(document).ready(function () {
 			}
 		});
 	});
-	$('.sqltable').on('click', '#deleteitem', function () {
+	$('.sqltable').on('click', '.deleteitem', function () {
 		if (confirm('Remove item from store')) {
 			var parent = $(this).closest('tr');
 			let sid = new URLSearchParams(window.location.search).get('id');
@@ -107,6 +198,30 @@ $(document).ready(function () {
 			});
 		}
 	});
+	$('#submitedit').click(function (event) {
+		event.preventDefault();
+		let sid = new URLSearchParams(window.location.search).get('id');
+		var obj = {};
+		$.each($('#editform').serializeArray(), function (index, value) {
+			if (value.value !== '') obj[value.name] = value.value;
+		});
+		delete obj['opentime'];
+		delete obj['closetime'];
+		if ($('#time1').val() !== '' && $('#time2').val() !== '') {
+			obj['times'] = $('#time1').val() + '-' + $('#time2').val();
+		}
+		if (!$.isEmptyObject(obj)) {
+			$.post(`/updateshop?id=${sid}`, obj, function (data) {
+				if (data.success) {
+					showCheckmark();
+					SetUpEditForm(obj);
+					UpdateRowShop(obj, sid);
+				} else {
+					alert(data.msg);
+				}
+			});
+		}
+	});
 	$('.sidenav a').click(function (e) {
 		e.preventDefault();
 		if (!$(this).hasClass('active')) {
@@ -118,18 +233,120 @@ $(document).ready(function () {
 	})
 });
 
+function createItemstr(value) {
+	$('#tritembody').children('tr:not(:first)').remove();
+	$.each(value, function (index, data) {
+		let markup =
+			'<tr id = item-' + data.Barcode + '>\
+        <td>' + data.name + '</td>\
+        <td>' + data.Barcode + '</td>\
+        <td>' + data.catname + '</td>\
+        <td>' + !!+data.signature_item + '</td>\
+        <td>' + data.current_price + '$' + '</td>\
+        <td>' + data.amount + '</td>\
+    </tr>';
+		$('#tritembody').append(markup);
+		$('#item-' + data.Barcode).data('id', data.Barcode);
+	})
+
+}
+
+function UpdateRowShop(data, tsid) {
+	var rows = $(`#super-${tsid} td`)
+	$(`#super-${tsid}`).data('id', data.id)
+	$(`#super-${tsid}`).id = `#super-${data.id}`
+	rows.eq(0).html(data.id);
+	rows.eq(1).html(data.square_meters);
+	rows.eq(2).html(data.days_open);
+	rows.eq(3).html(data.times);
+	rows.eq(4).html(data.street_name + ' ' + data.street_number + ' ' + data.city + ' ' + data.state + ' ' + data.zipcode);
+	rows.eq(5).html(data.phone_number);
+}
+
+function UpdateRowItem(data, barc, bool) {
+	var rows = $(`#item-${barc} td`);
+	if (bool) {
+		$(`#item-${barc}`).data('id', data.barc)
+		$(`#item-${barc}`).id = `#item-${data.barcode}`
+		rows.eq(0).html(data.name);
+		rows.eq(1).html(data.Barcode);
+		rows.eq(2).html(data.catname);
+		rows.eq(3).html(!!+data.signature_item ? "true" : `false`);
+		rows.eq(4).html(data.current_price);
+	} else {
+		rows.eq(5).html(data.self);
+		rows.eq(6).html(data.aisle);
+	}
+}
+
+function loadViewModal(id) {
+	$(`.spinner`).show();
+	$('#sidenav-selected').html(`Store ${id}`)
+	$.post(`/getsupersingle?id=${id}`, function (data, success) {
+		if (success) {
+			$.each(data, function (index, value) {
+				SetUpEditForm(value);
+			});
+		}
+	})
+	$.post('/getsuperitemsall', function (data, success) {
+		if (success) {
+			$.each(data, (index, value) => {
+				AddItemOption(value);
+			});
+		}
+	});
+	$.post('/getsuperitems?id=' + id, function (data, success) {
+		if (success) {
+			createItems(data);
+		}
+	});
+	$.post('/getcategory?id=' + id, function (data, success) {
+		if (success) {
+			createCategory(data);
+		}
+	});
+	$.post('/popularpairs?id=' + id, function (data) {
+		if (data.success) {
+			AddTopPair(data.dat);
+		}
+	})
+	$.post('/gettranscaction?id=' + id, function (data, success) {
+		if (success) {
+			if (!$.isEmptyObject(data)) {
+				createTranscaction(data);
+			}
+
+		}
+	});
+}
+
 function SetUpEditForm(data) {
+	var time1 = data.times.split('-')[0];
+	if (time1.length <= 4) {
+		time1 = `0${time1}`
+	}
 	$('#editform [name = id]').val(data.id);
 	$('#editform [name = square_meters]').val(data.square_meters);
-	$('#editform [name = open]').val(data.days_open);
-	$('#editform [name = opentime]').val(`0${data.times.split('-')[0]}`);
+	$('#editform [name = days_open]').val(data.days_open);
+	$('#editform [name = opentime]').val(time1);
 	$('#editform [name = closetime]').val(data.times.split('-')[1]);
-	$('#editform [name = streetname]').val(data.street_name);
-	$('#editform [name = streetno]').val(data.street_number);
+	$('#editform [name = street_name]').val(data.street_name);
+	$('#editform [name = street_number]').val(data.street_number);
 	$('#editform [name = city]').val(data.city);
 	$('#editform [name = state]').val(data.state);
-	$('#editform [name = zip]').val(data.zipcode);
-	$('#editform [name = phone]').val(data.phone_number);
+	$('#editform [name = zipcode]').val(data.zipcode);
+	$('#editform [name = phone_number]').val(data.phone_number);
+}
+
+function SetUpItemForm(data) {
+	$(`#editform-2 [name = name]`).val(data.name);
+	$(`#editform-2 [name = barcode]`).val(data.Barcode);
+	$(`#editform-2 [name = category_id]`).val(data.category_id);
+	$(`#editform-2 [name = signature_item]`).val(data.signature_item);
+	$(`#editform-2 [name = current_price]`).val(data.current_price);
+	$(`#editform-1 [name = self]`).val(data.self);
+	$(`#editform-1 [name = aisle]`).val(data.aisle);
 }
 
 function ChangeActivePage(show) {
@@ -137,21 +354,7 @@ function ChangeActivePage(show) {
 	$(show).toggleClass(`active`);
 }
 
-function NewShopRowFromForm(value) {
-	var newrow = {
-		id: '',
-		square: '',
-		open_on: '',
-		hours: '',
-		adrress: '',
-		phone: ''
-	};
-	newrow.id = value.id;
-	newrow.square = value.square_meters;
-	newrow.open_on = value.open;
-	newrow.hours = value.opentime + '-' + value.closetime;
-	newrow.phone = value.phone;
-	newrow.adrress = value.streetname + ' ' + value.streetno + ' ' + value.city + ' ' + value.state + ' ' + value.zip;
+function NewShopRowFromForm(newrow) {
 	let markup =
 		'<tr id = super-' +
 		newrow.id +
@@ -174,9 +377,9 @@ function NewShopRowFromForm(value) {
         <td>' +
 		newrow.phone +
 		"</td>\
-        <td class = 'text-center'><button id ='deleteshop', class='mr-2 btn btn-outline-danger btn-sm'>\
+        <td class = 'text-center'><button class='mr-2 btn btn-outline-danger btn-sm deleteshop'>\
             <i class='fa fa-trash-o'></i>\
-            </button><button id ='viewshop', class='mr-2 btn btn-outline-primary btn-sm'>\
+            </button><button class='mr-2 btn btn-outline-primary btn-sm viewshop'>\
             <i class='fa fa-eye'></i>\
             </button>\
         </td>\
@@ -223,9 +426,9 @@ function NewShopRowFromGet(value) {
         <td>' +
 		newrow.phone +
 		"</td>\
-        <td class = 'text-center'><button id ='deleteshop', class='mr-2 btn btn-outline-danger btn-sm'>\
+        <td class = 'text-center'><button class='mr-2 btn btn-outline-danger btn-sm deleteshop'>\
             <i class='fa fa-trash-o'></i>\
-            </button><button id ='viewshop', class='mr-2 btn btn-outline-primary btn-sm'>\
+            </button><button class='mr-2 btn btn-outline-primary btn-sm viewshop'>\
             <i class='fa fa-eye'></i>\
             </button>\
         </td>\
@@ -272,11 +475,11 @@ function createItems(value) {
 		<td>' + data.current_price + '$' + '</td>\
 		<td>' + data.self + '</td>\
 		<td>' + data.aisle + "</td>\
-		<td class = 'text-center'><button id ='deleteitem', class='btn btn-outline-danger btn-sm'>\
+		<td class = 'text-center'><button  class='btn btn-outline-danger btn-sm deleteitem'>\
                 <i class='fa fa-trash-o'></i>\
 			</button>\
-            <button id ='edititem', class='ml-2 btn btn-outline-primary btn-sm'>\
-            <i class='fa fa-edit'></i>\
+            <button  class='ml-2 btn btn-outline-primary btn-sm viewitem'>\
+            <i class='fa fa-eye'></i>\
 			</button>\
         </td>\
 		</tr>";
@@ -301,4 +504,81 @@ function createCategory(data) {
 		$('#categorybody').append(markup);
 		$('#category-' + value.category_id).data('id', value.category_id);
 	});
+}
+
+function createTranscaction(data) {
+	$('#transcactionbody').empty();
+	$.each(data, function (index, value) {
+		let markup =
+			'<tr id = transcaction-' +
+			value.id +
+			'><td>' +
+			value.id +
+			'</td><td>' +
+			value.payment_method +
+			'</td><td>' +
+			value.card_id +
+			'</td><td>' +
+			value.date.replace('T', ' ').replace('Z', '') +
+			'</td>\
+			<td>' + value.store_id + '</td>\
+			<td>' + value.total_pieces + '</td>\
+			<td>' + value.total_price + ' $' + "</td>\
+            <td class = 'text-center'><button  class='btn btn-outline-primary btn-sm viewtranscaction'>\
+                    <i class='fa fa-eye'></i>\
+                </button>\
+            </td>\
+        </tr>";
+		$('#transcactionbody').append(markup);
+		$('#transcaction-' + value.id).data('id', value.id);
+	});
+	window.setTimeout(function () {
+		$(`.spinner`).hide();
+		blur("#viewmodal");
+	}, 1000)
+
+}
+
+function AddTopPair(values) {
+	$('#pairbody').empty();
+	$.each(values, function (index, data) {
+
+		let markup = "<tr>\
+		<td>"+ data.name1 + "</td>\
+		<td>"+ data.name2 + "</td>\
+		<td>"+ data.weight + "</td>\
+	</tr>"
+		$('#pairbody').append(markup);
+
+	})
+}
+
+
+function AddCategoryOption(value) {
+	let markup = `<option value='${value.category_id}'>${value.name}</option>`
+	$('#forcategories').append(markup);
+}
+
+function CreateHistory(data) {
+	$('#historybody').empty();
+	$.each(data, function (index, value) {
+		let markup =
+			'<tr>\
+            <td>'+ value.date.replace('T', ' ').replace('Z', '') + '</td>\
+            <td>' + value.old_price + '</td>\
+            <td>' + value.new_price + '</td>\
+        </tr>'
+
+		$('#historybody').append(markup);
+	})
+
+}
+
+function showCheckmark() {
+	if ($(`.checkmark`).is(':hidden')) {
+		$(`.checkmark`).show();
+		window.setTimeout(function () {
+			$(`.checkmark`).fadeOut("fast");
+		}, 2000)
+	}
 }

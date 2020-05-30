@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
+    <!-- CHART JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
     <link href="Crudapp.css" rel="stylesheet">
 
     <!-- jQuery library -->
@@ -17,17 +20,22 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="addnavbar.js"></script>
     <script type="text/javascript" src="customerpage.js"></script>
+    <script type="text/javascript" src="customerchart.js"></script>
     <title>Document</title>
 </head>
 
 <body>
+
+    <!-- spinner -->
+    <div class="spinner"></div>
+
     <!-- form to add -->
     <div class="background">
         <h2 class="text-center">All Customers</h2>
 
         <div class="container-fluid">
             <a id="addnew" href="#"> <i class="fa fa-plus-circle fa-2x"> Add</i> </a>
-            <table id="sqltable" , class="table table-bordered table-dark table-hover table-striped">
+            <table class="sqltable table table-bordered table-dark table-hover table-striped">
                 <thead class="text-center">
                     <tr>
                         <th scope="col">Card ID</th>
@@ -152,6 +160,256 @@
                     <button id='create' class="btn btn-orange">Add</button>
                 </div>
             </form>
+        </div>
+    </div>
+    <div class="popup" id="viewmodal">
+        <a class="closemodal" href="#"><i class="fa fa-times"></i></a>
+        <div class="sidenav">
+            <p id="sidenav-selected"></p>
+            <a href="#" class="" aria-controls="edit">Change Values</a>
+            <a href="#" class="active" aria-controls="transcactions">Transcactions</a>
+            <a href="#" class="" aria-controls="favourite">Favourite Items</a>
+            <a href="#" class="" aria-controls="visits">Visits</a>
+            <a href="#" class="" aria-controls="times">Shopping Times</a>
+            <a href="#" class="" aria-controls="week">Weekly Average</a>
+            <a href="#" class="" aria-controls="month">Monthly Average</a>
+            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+            </svg>
+        </div>
+
+        <div class="modal-body" id="edit">
+            <div class="container">
+                <form id="editform" , class="form-horizontal">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="card_id">Card ID</label>
+                            <div class="col">
+                                <input type="number" , class="form-control" , name="card_id" , id="id" ,
+                                    placeholder="0">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="points">Card Points</label>
+                            <div class="col">
+                                <input type="number" , class="form-control " , name="points" , placeholder="120">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="first_name">First Name</label>
+                            <div class="col">
+                                <input type="text" , class="form-control " , name="first_name" , placeholder="Jack">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="last_name">Last Name</label>
+                            <div class="col">
+                                <input type="text" , class="form-control " , name="last_name" , placeholder="Hanma">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="street_name">Street Name</label>
+                            <div class="col">
+                                <input type="text" , class="form-control" , name="street_name" , placeholder="Name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="street_number">Street Number</label>
+                            <div class="col">
+                                <input type="text" , class="form-control" , name="street_number" , placeholder="number">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="city">City</label>
+                            <div class="col">
+                                <input type="text" , class="form-control" , name="city" , placeholder="city">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="state">State</label>
+                            <div class="col">
+                                <input type="text" , class="form-control" , name="state" , placeholder="state">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="zipcode">Zipcode</label>
+                            <div class="col">
+                                <input type="number" , class="form-control" , name="zipcode" , placeholder="15122">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="birth_date" ,>Birth Date</label>
+                            <div class="col">
+                                <input type="date" , class="form-control" , name="birth_date" , placeholder="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="married" ,>Married</label>
+                            <div class="col">
+                                <select class="custom-select" , name="married">
+                                    <option value="">don't change</option>
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col col-form-label" , for="children" ,># Of Children</label>
+                            <div class="col">
+                                <input type="number" , class="form-control" , name="children" , placeholder="0">
+                            </div>
+                        </div>
+                        <div class="form-select">
+                            <label class="col col-form-label" , for="pets" ,>Has pet(s)</label>
+                            <div class="col">
+                                <select class="custom-select" , name="pets">
+                                    <option value="">don't change</option>
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button id='submitedit' class="btn btn-orange">Edit</button>
+                    </div>
+                </form>
+            </div><br>
+        </div>
+
+        <div class="modal-body active" id="transcactions">
+            <div class="container ">
+                <table id="tr-items" class="sqltable table table-bordered table-dark table-striped hidden">
+                    <caption class="text-center">Items in transcaction</caption>
+                    <thead class="text-center">
+                        <tr>
+                            <th scope="col">Transcaction</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Barcode</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Signature Item</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Amount Bought</th>
+
+                        </tr>
+                    </thead>
+                    <tbody class="text-center" id="tritembody">
+                        <tr>
+                            <td id="trid" rowspan="42">tran id</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="sqltable table table-dark table-striped table-hover table-bordered">
+                    <caption class="text-center">Customer Transcactions</caption>
+                    <thead class="text-center">
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Method</th>
+                            <th scope="col">Customer</th>
+                            <th scope="col">Date-time</th>
+                            <th scope="col">Store</th>
+                            <th scope="col">Total Pieces Bought</th>
+                            <th scope="col">Total Price</th>
+                            <th scope="col">Action</th>
+
+                        </tr>
+                    </thead>
+                    <tbody class="text-center" id="transcactionbody">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="modal-body" id="favourite">
+            <div class="container ">
+
+                <table id='item-view' class="sqltable table table-bordered table-dark table-striped hidden">
+                    <caption class="text-center">Price History</caption>
+                    <thead class="text-center">
+                        <tr>
+                            <th scope="col">Date Of Change</th>
+                            <th scope="col">Old Price</th>
+                            <th scope="col">New Price Item</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center" id="historybody">
+
+                    </tbody>
+                </table>
+                <table class="sqltable table table-dark table-striped table-hover table-bordered">
+                    <caption class="text-center">Top 10 items of customer</caption>
+                    <thead class="text-center">
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Barcode</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Signature Item</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Action</th>
+
+                        </tr>
+                    </thead>
+                    <tbody class="text-center" id="topitembody">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="modal-body" id="visits">
+            <div class="container ">
+                <table class="sqltable table table-dark table-striped table-hover table-bordered">
+                    <caption class="text-center">Visited stores</caption>
+                    <thead class="text-center">
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Square Meters</th>
+                            <th scope="col">Open On</th>
+                            <th scope="col">Hours</th>
+                            <th scope="col">Adrress </th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">Action</th>
+
+                        </tr>
+                    </thead>
+                    <tbody class="text-center" id="storesbody">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="modal-body" id="times">
+            <div class="container">
+                <canvas id="timeschart" class="">
+
+                </canvas>
+            </div>
+        </div>
+
+        <div class="modal-body" id="week">
+            <div class="container">
+                <canvas id="weekschart" class="">
+
+                </canvas>
+            </div>
+        </div>
+
+        <div class="modal-body" id="month">
+            <div class="container">
+                <canvas id="monthschart" class="">
+
+                </canvas>
+            </div>
         </div>
     </div>
 

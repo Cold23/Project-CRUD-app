@@ -10,6 +10,9 @@
 
     <link href="Crudapp.css" rel="stylesheet">
 
+    <!-- CHART JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -18,18 +21,20 @@
 
     <script type="text/javascript" src="index.js"></script>
     <script type="text/javascript" src="addnavbar.js"></script>
+    <script type="text/javascript" src="supercharts.js"></script>
     <title>Supermarkets</title>
 </head>
 
 <body>
 
-    </div>
+    <div class="spinner"></div>
+
     <div class="background">
         <h2 class="text-center bg-light">List of Supermarkets
         </h2>
         <div class="container-fluid">
             <div class="table-responsive text-nowarp">
-                <table id="sqltable" , class="table table-dark table-striped table-hover">
+                <table class="sqltable table table-dark table-striped table-hover">
                     <thead class="text-center">
                         <a id="addnew" href=""> <i class="fa fa-plus-circle fa-2x"> Add</i> </a>
                         <tr>
@@ -70,9 +75,10 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col col-form-label" , for="open">Open</label>
+                        <label class="col col-form-label" , for="days_open">Open</label>
                         <div class="col">
                             <select class="custom-select " , name="open" , aria-placeholder="everyday">
+                                <option value="">None</option>
                                 <option value="everyday">everyday</option>
                                 <option value="daily">daily</option>
                                 <option value="dailysaturday">dailysaturday</option>
@@ -82,13 +88,13 @@
                     <div class="form-group">
                         <label class="col col-form-label" , for="opentime">Open Time</label>
                         <div class="col">
-                            <input type="time" , class="form-control" , name="opentime">
+                            <input type="time" , class="form-control" , name="opentime" id="time12">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col col-form-label" , for="closetime">Close Time</label>
                         <div class="col">
-                            <input type="time" , class="form-control" , name="closetime">
+                            <input type="time" , class="form-control" , name="closetime" id="time22">
                         </div>
                     </div>
                 </div>
@@ -96,13 +102,13 @@
                     <div class="form-group">
                         <label class="col col-form-label" , for="streetname">Street Name</label>
                         <div class="col">
-                            <input type="text" , class="form-control" , name="streetname" , placeholder="Name">
+                            <input type="text" , class="form-control" , name="stree_name" , placeholder="Name">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col col-form-label" , for="streetno">Street Number</label>
                         <div class="col">
-                            <input type="text" , class="form-control" , name="streetno" , placeholder="number">
+                            <input type="text" , class="form-control" , name="street_number" , placeholder="number">
                         </div>
                     </div>
                     <div class="form-group">
@@ -120,14 +126,14 @@
                     <div class="form-group">
                         <label class="col col-form-label" , for="zip">Zipcode</label>
                         <div class="col">
-                            <input type="number" , class="form-control" , name="zip" , placeholder="15122">
+                            <input type="number" , class="form-control" , name="zipcode" , placeholder="15122">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="col col-form-label" , for="phone" ,>Phone</label>
                         <div class="col">
-                            <input type="number" , class="form-control" , name="phone" , placeholder="123456789">
+                            <input type="number" , class="form-control" , name="phone_number" , placeholder="123456789">
                         </div>
                     </div>
                 </div>
@@ -141,13 +147,20 @@
     <div class="popup" id="viewmodal">
         <a class="closemodal" href="#"><i class="fa fa-times"></i></a>
         <div class="sidenav">
+            <p id="sidenav-selected">Store 5</p>
             <a href="#" class="" aria-controls="edit">Change Values</a>
             <a href="#" class="active" aria-controls="items">Items</a>
             <a href="#" class="" aria-controls="categories">Categories</a>
-            <a href="#">Transcaction</a>
-            <a href="#">Popular Pairs</a>
-            <a href="#">Popular Spots</a>
-            <a href="#">Active Times</a>
+            <a href="#" aria-controls="transcactions">Transcactions</a>
+            <a href="#" aria-controls="pairs">Popular Pairs</a>
+            <a href="#" aria-controls="spots">Popular Spots</a>
+            <a href="#" aria-controls="sign">Signature Trust</a>
+            <a href="#" aria-controls="money">Money Spend</a>
+            <a href="#" aria-controls="age">Age Activity</a>
+            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+            </svg>
         </div>
         <div class="modal-body" id="edit">
             <div class="container">
@@ -168,7 +181,7 @@
                         <div class="form-group">
                             <label class="col col-form-label" , for="open">Open</label>
                             <div class="col">
-                                <select class="custom-select " , name="open" , aria-placeholder="everyday">
+                                <select class="custom-select " , name="days_open" , aria-placeholder="everyday">
                                     <option value="everyday">everyday</option>
                                     <option value="daily">daily</option>
                                     <option value="dailysaturday">dailysaturday</option>
@@ -178,13 +191,13 @@
                         <div class="form-group">
                             <label class="col col-form-label" , for="opentime">Open Time</label>
                             <div class="col">
-                                <input type="time" , class="form-control" , name="opentime">
+                                <input type="time" , class="form-control" , name="opentime" id="time1">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col col-form-label" , for="closetime">Close Time</label>
                             <div class="col">
-                                <input type="time" , class="form-control" , name="closetime">
+                                <input type="time" , class="form-control" , name="closetime" id="time2">
                             </div>
                         </div>
                     </div>
@@ -192,13 +205,13 @@
                         <div class="form-group">
                             <label class="col col-form-label" , for="streetname">Street Name</label>
                             <div class="col">
-                                <input type="text" , class="form-control" , name="streetname" , placeholder="Name">
+                                <input type="text" , class="form-control" , name="street_name" , placeholder="Name">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col col-form-label" , for="streetno">Street Number</label>
                             <div class="col">
-                                <input type="text" , class="form-control" , name="streetno" , placeholder="number">
+                                <input type="text" , class="form-control" , name="street_number" , placeholder="number">
                             </div>
                         </div>
                         <div class="form-group">
@@ -216,24 +229,109 @@
                         <div class="form-group">
                             <label class="col col-form-label" , for="zip">Zipcode</label>
                             <div class="col">
-                                <input type="number" , class="form-control" , name="zip" , placeholder="15122">
+                                <input type="number" , class="form-control" , name="zipcode" , placeholder="15122">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col col-form-label" , for="phone" ,>Phone</label>
+                            <label class="col col-form-label" , for="phone_number" ,>Phone</label>
                             <div class="col">
                                 <input type="number" , class="form-control" , name="phone" , placeholder="123456789">
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-offset-2 col">
-                        <input type="submit" , class="btn btn-orange" id="create">
+                        <input type="submit" , class="btn btn-orange" id="submitedit">
                     </div>
                 </form>
             </div>
         </div>
         <div class="modal-body active" id="items">
+            <div id="item-view" class="container hidden" style="margin-bottom: 5%;">
+                <h3>Change Position In Store</h3>
+                <form id='editform-1' , class="form-horizontal" style="margin-bottom: 5%;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="col-sm-5 col-form-label" , for="square_meters">Shelf #</label>
+                            <div class="col-sm-10">
+                                <input type="number" , class="form-control " , name="self" , placeholder="5">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-5 col-form-label" , for="square_meters">Aisle #</label>
+                            <div class="col-sm-10">
+                                <input type="number" , class="form-control " , name="aisle" , placeholder="5">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <div class="col-sm-10 col-sm-offset-5">
+                            <input type="submit" , class="sumbit btn btn-orange btn-sm" id="0">
+                        </div>
+                    </div>
+                </form>
+                <h3>Change Item Values</h3>
+                <form id='editform-2' , class="form-horizontal">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="col-sm-5 col-form-label" , for="square_meters">Name</label>
+                            <div class="col-sm-12">
+                                <input type="text" , class="form-control " , name="name" , placeholder="Name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-5 col-form-label" , for="square_meters">Barcode</label>
+                            <div class="col-sm-12">
+                                <input type="number" , class="form-control " , name="barcode" , placeholder="5321444">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-5 col-form-label" , for="category_id">Category</label>
+                            <div class="col-sm-12">
+                                <select class="custom-select mr-sm-2" , name="category_id" , id="forcategories">
+                                    aria-placeholder="">
+                                    <option value="">Dont change</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-12 col-form-label" , for="signature_item">Signature Item</label>
+                            <div class="col-sm-12">
+                                <select class="custom-select mr-sm-2" , name="signature_item">
+                                    <option value="">Dont change</option>
+                                    <option value="1">yes</option>
+                                    <option value="0">no</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-5 col-form-label" , for="current_price">Price</label>
+                            <div class="col-sm-10">
+                                <input type="number" , class="form-control " , name="current_price" ,
+                                    placeholder="23.12">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <div class="col-sm-10 col-sm-offset-5">
+                            <input type="submit" , class="sumbit btn btn-orange btn-sm" id="1">
+                        </div>
+                    </div>
+                </form>
+                <h2 class="text-center">Price History</h2>
+                <table id="sqltable" , class="table table-bordered table-dark table-striped">
+                    <thead class="text-center">
+                        <tr>
+                            <th scope="col">Date Of Change</th>
+                            <th scope="col">Old Price</th>
+                            <th scope="col">New Price Item</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center" id="historybody">
+
+                    </tbody>
+                </table>
+            </div>
             <div class="container">
                 <h3>Add existing item to store</h3>
                 <form id='itemform' , class="form-horizontal">
@@ -303,10 +401,94 @@
                 </table>
             </div>
         </div>
+        <div class="modal-body" id="transcactions">
+            <div class="container">
+                <table id="tr-items" class="sqltable table table-bordered table-dark table-striped hidden">
+                    <caption class="text-center">Items in transcaction</caption>
+                    <thead class="text-center">
+                        <tr>
+                            <th scope="col">Transcaction</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Barcode</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Signature Item</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Amount Bought</th>
 
-    </div>
-    </div>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center" id="tritembody">
+                        <tr>
+                            <td id="trid" rowspan="42">tran id</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="sqltable table table-dark table-striped table-hover">
+                    <caption class="text-center">List of Transcactions</caption>
+                    <thead class="text-center">
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Method</th>
+                            <th scope="col">Customer</th>
+                            <th scope="col">Date-time</th>
+                            <th scope="col">Store</th>
+                            <th scope="col">Total Pieces Bought</th>
+                            <th scope="col">Total Price</th>
+                            <th scope="col">Action</th>
 
+                        </tr>
+                    </thead>
+                    <tbody class="text-center" id="transcactionbody">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-body" id="pairs">
+            <div class="container ">
+                <table class="sqltable table table-dark table-striped table-hover">
+                    <caption class="text-center">Popular item pairs</caption>
+                    <thead class="text-center">
+                        <tr>
+                            <th scope="col">Item 1</th>
+                            <th scope="col">Item 2</th>
+                            <th scope="col">Time Bought Toghether</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center" id="pairbody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-body" id="spots">
+            <div class="container">
+                <canvas id="spotchart">
+
+                </canvas>
+            </div>
+        </div>
+        <div class="modal-body" id="sign">
+            <div class="container">
+                <canvas id="signchart">
+
+                </canvas>
+            </div>
+        </div>
+        <div class="modal-body" id="money">
+            <div class="container">
+                <canvas id="moneychart">
+
+                </canvas>
+            </div>
+        </div>
+        <div class="modal-body" id="age">
+            <div class="container">
+                <canvas id="agechart">
+
+                </canvas>
+            </div>
+        </div>
+    </div>
 
 </body>
 

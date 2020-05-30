@@ -1,5 +1,21 @@
 $(document).ready(function () {
-    let id = new URLSearchParams(window.location.search).get('id');
+    let tempid = new URLSearchParams(window.location.search).get('id');
+    if (id !== null) {
+        chartSetup(tempid);
+    }
+    $('.sqltable').on('click', '.viewshop', function () {
+        let id = new URLSearchParams(window.location.search).get('id');
+        chartSetup(id);
+    });
+    $('.closemodal').click(function (e) {
+        window.chart1.destroy();
+        window.chart2.destroy();
+        window.chart3.destroy();
+        window.chart4.destroy();
+    })
+});
+
+function chartSetup(id) {
     var ctxspot = document.getElementById("spotchart").getContext('2d');
     var ctxsign = document.getElementById("signchart").getContext('2d');
     var ctxmoney = document.getElementById("moneychart").getContext('2d');
@@ -22,49 +38,49 @@ $(document).ready(function () {
             $.each(data.dat, function (index, value) {
                 spotlabels.push("Aisle: " + value.aisle + " Shelf :" + value.self);
                 spotdata.push(value.p);
-                var chart = new Chart(ctxspot, {
-                    type: 'bar',
-                    data: {
-                        labels: spotlabels,
-                        datasets: [{
-                            label: "# of buys",
-                            data: spotdata
+            })
+            window.chart1 = new Chart(ctxspot, {
+                type: 'bar',
+                data: {
+                    labels: spotlabels,
+                    datasets: [{
+                        label: "# of buys",
+                        data: spotdata
+                    }]
+                },
+                options: {
+                    hover: {
+                        mode: 'nearest',
+                        intersect: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Most popular Positions'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Position'
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                            },
+                            ticks: {
+                                beginAtZero: true
+                            }
                         }]
                     },
-                    options: {
-                        hover: {
-                            mode: 'nearest',
-                            intersect: false
-                        },
-                        title: {
-                            display: true,
-                            text: 'Most popular Positions'
-                        },
-                        tooltips: {
-                            mode: 'index',
-                            intersect: false,
-                        },
-                        scales: {
-                            xAxes: [{
-                                display: true,
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 'Position'
-                                }
-                            }],
-                            yAxes: [{
-                                display: true,
-                                scaleLabel: {
-                                    display: true,
-                                },
-                                ticks: {
-                                    beginAtZero: true
-                                }
-                            }]
-                        },
-                    }
 
-                })
+                }
             })
         }
     })
@@ -72,50 +88,52 @@ $(document).ready(function () {
         if (data.success) {
             $.each(data.dat, function (index, value) {
                 signlabels.push(value.name);
-                signdata.push(value.perc);
-                var chart = new Chart(ctxsign, {
-                    type: 'bar',
-                    data: {
-                        labels: signlabels,
-                        datasets: [{
-                            label: "Percent",
-                            data: signdata
+                signdata.push(value.perc.toFixed(2));
+            })
+            window.chart2 = new Chart(ctxsign, {
+                type: 'bar',
+                data: {
+                    labels: signlabels,
+                    datasets: [{
+                        label: "Percent",
+                        data: signdata
+                    }]
+                },
+                options: {
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    title: {
+                        display: true,
+                        text: 'Signature Tust % chart'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Category'
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                            },
+                            ticks: {
+                                beginAtZero: true,
+                                callback: function (value, index, values) {
+                                    return value + " %";
+                                }
+                            }
                         }]
                     },
-                    options: {
-                        hover: {
-                            mode: 'nearest',
-                            intersect: true
-                        },
-                        title: {
-                            display: true,
-                            text: 'Signature Tust % chart'
-                        },
-                        tooltips: {
-                            mode: 'index',
-                            intersect: false,
-                        },
-                        scales: {
-                            xAxes: [{
-                                display: true,
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 'Category'
-                                }
-                            }],
-                            yAxes: [{
-                                display: true,
-                                scaleLabel: {
-                                    display: true,
-                                },
-                                ticks: {
-                                    beginAtZero: true
-                                }
-                            }]
-                        },
-                    }
-
-                })
+                }
             })
         }
     })
@@ -124,49 +142,49 @@ $(document).ready(function () {
             $.each(data.dat, function (index, value) {
                 moneylabels.push(value.time);
                 moneydata.push(value.p.toFixed(2));
-                var chart = new Chart(ctxmoney, {
-                    type: 'bar',
-                    data: {
-                        labels: moneylabels,
-                        datasets: [{
-                            label: "$ spend",
-                            data: moneydata
+            })
+            window.chart3 = new Chart(ctxmoney, {
+                type: 'bar',
+                data: {
+                    labels: moneylabels,
+                    datasets: [{
+                        label: "$ spend",
+                        data: moneydata
+                    }]
+                },
+                options: {
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    title: {
+                        display: true,
+                        text: 'Time-Money Spend Chart'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Time'
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                            },
+                            ticks: {
+                                beginAtZero: true
+                            }
                         }]
                     },
-                    options: {
-                        hover: {
-                            mode: 'nearest',
-                            intersect: true
-                        },
-                        title: {
-                            display: true,
-                            text: 'Time-Money Spend Chart'
-                        },
-                        tooltips: {
-                            mode: 'index',
-                            intersect: false,
-                        },
-                        scales: {
-                            xAxes: [{
-                                display: true,
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 'Time'
-                                }
-                            }],
-                            yAxes: [{
-                                display: true,
-                                scaleLabel: {
-                                    display: true,
-                                },
-                                ticks: {
-                                    beginAtZero: true
-                                }
-                            }]
-                        },
-                    }
+                }
 
-                })
             })
         }
     })
@@ -183,10 +201,8 @@ $(document).ready(function () {
                     }
                 }
             }
-            console.log(agedata);
-            console.log(data.dat)
 
-            var chart = new Chart(ctxage, {
+            window.chart4 = new Chart(ctxage, {
                 type: 'bar',
                 data: {
                     labels: agetimelabels,
@@ -209,7 +225,7 @@ $(document).ready(function () {
                 },
                 options: {
                     spanGaps: true,
-                    responsive: true,
+                    // responsive: true,
                     hover: {
                         mode: 'nearest',
                         intersect: true
@@ -235,11 +251,14 @@ $(document).ready(function () {
                             display: true,
                             stacked: true,
                             scaleLabel: {
-                                display: true
+                                display: true,
                             },
                             ticks: {
                                 beginAtZero: true,
                                 callback: function (value, index, values) {
+                                    if (value > 100) {
+                                        return ""
+                                    }
                                     return value + " %";
                                 }
                             }
@@ -250,4 +269,4 @@ $(document).ready(function () {
             })
         }
     })
-});
+}

@@ -8,10 +8,10 @@
     -moz-animation: rotation .6s infinite ease-in-out;
     -o-animation: rotation .6s infinite ease-in-out;
     animation: rotation .6s infinite ease-in-out;
-    border-left:6px solid rgba(0,100,239,1);
-    border-right:6px solid rgba(0,100,239,0);
-    border-bottom:6px solid rgba(0,100,239,0);
-    border-top:6px solid rgba(0,100,239,1);
+    border-left:6px solid rgba(255, 100, 0, 1);
+    border-right:6px solid rgba(255, 100, 0, 0.1);
+    border-bottom:6px solid rgba(255, 100, 0, .1);
+    border-top:6px solid rgba(255, 100, 0, 1);
     border-radius:50%;
     z-index: 1;
  }
@@ -46,16 +46,20 @@
     position: absolute;
  }
 
+ .hidden{
+    display: none;
+ }
+
+
  .modal-body{
     position: absolute;
     visibility: hidden;
     margin-left: 150px;
-    width: calc(100% - 150px);
+    width: calc(100% - 176px);
     height: 98%;
     overflow: auto;
     opacity: 0;
-    transition: all 0.5s ease;
-    
+    transition: all 0.5s ease;  
  }
 
 
@@ -80,6 +84,17 @@
     transition: 0.5s;
     pointer-events: none;
  }
+ div.popup-sm{
+   width: 60vw;
+   height: 45vh;
+}
+
+div.center{
+   width: 60%;
+   padding: 5px;
+   margin: 0 auto;
+}
+
 
  div.popup.active{
     top: 50%;
@@ -130,7 +145,7 @@
 
  .sidenav {
    height: 100%; 
-   width: 150px;
+   width: 175px;
    position: fixed;
    z-index: 1;
    top: 0; 
@@ -158,6 +173,10 @@
    white-space: nowrap;
  }
 
+.sidenav svg{
+   margin-top: 100px;
+}
+
  .sidenav.closed a {
     visibility: hidden;
     opacity: 0;
@@ -173,6 +192,14 @@
    color: rgba(255, 100, 0, 1);
  }
 
+ .sidenav p{
+   padding: 6px 8px 16px 16px;
+   color: rgba(255, 100, 0, 1);
+   font-size: 25px;
+   font-weight: bold;
+
+ }
+
 
  .btn-orange{
     background-color: orange;
@@ -185,5 +212,53 @@
    transform: scale(1.1);
 }
 
-
-
+.checkmark__circle {
+   stroke-dasharray: 216;
+   stroke-dashoffset: 216;
+   stroke-width: 2;
+   stroke-miterlimit: 10;
+   stroke: orange;
+   fill: none;
+   animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+ }
+ 
+ .checkmark {
+   width: 106px;
+   height: 106px;
+   border-radius: 50%;
+   stroke-width: 2;
+   position: absolute;
+   bottom: 34px;
+   left: 34px;
+   stroke: #111;
+   stroke-miterlimit: 10;
+   margin: 10% auto;
+   box-shadow: inset 0px 0px 0px orange;
+   animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+ }
+ 
+ .checkmark__check {
+   transform-origin: 50% 50%;
+   stroke-dasharray: 98;
+   stroke-dashoffset: 98;
+   animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+ }
+ 
+ @keyframes stroke {
+   100% {
+     stroke-dashoffset: 0;
+   }
+ }
+ @keyframes scale {
+   0%, 100% {
+     transform: none;
+   }
+   50% {
+     transform: scale3d(1.1, 1.1, 1);
+   }
+ }
+ @keyframes fill {
+   100% {
+     box-shadow: inset 0px 0px 0px 80px orange;
+   }
+ }

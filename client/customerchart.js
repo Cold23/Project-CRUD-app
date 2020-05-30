@@ -1,6 +1,28 @@
 $(document).ready(function () {
-    let id = new URLSearchParams(window.location.search).get('id');
-    //#region  
+    var id;
+    id = new URLSearchParams(window.location.search).get('id');
+    if (id !== null) {
+        chartSetup(id)
+    }
+    $('.sqltable').on('click', '.viewcustomer', function () {
+        id = new URLSearchParams(window.location.search).get('id');
+        chartSetup(id);
+    });
+    $('.closemodal').click(function (e) {
+        window.chart1.destroy();
+        window.chart2.destroy();
+        window.chart3.destroy();
+        var vdata = [];
+        var labels = [];
+        var weekdata = [];
+        var weeklabels = [];
+        var monthdata = [];
+        var monthlabels = [];
+    })
+});
+
+function chartSetup(id) {
+
     const monthNames = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     ];
@@ -13,14 +35,14 @@ $(document).ready(function () {
     var weeklabels = [];
     var monthdata = [];
     var monthlabels = [];
-    //#endregion
+
     $.post('/getcustomervisittimes?id=' + id, function (data) {
         if (data) {
             $.each(data, function (index, value) {
                 labels.push(value.time);
                 vdata.push(value.value);
             })
-            var BarChart = new Chart(ctx, {
+            window.chart1 = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
@@ -54,7 +76,7 @@ $(document).ready(function () {
 
                 weekdata.push(value.average);
             })
-            var BarChart2 = new Chart(weekctx, {
+            window.chart2 = new Chart(weekctx, {
                 type: 'bar',
                 data: {
                     labels: weeklabels,
@@ -82,7 +104,7 @@ $(document).ready(function () {
                 monthlabels.push(`${monthNames[value.month - 1]} ${value.year}`);
                 monthdata.push(value.average);
             })
-            var BarChart3 = new Chart(monthctx, {
+            window.chart3 = new Chart(monthctx, {
                 type: 'bar',
                 data: {
                     labels: monthlabels,
@@ -104,4 +126,4 @@ $(document).ready(function () {
             })
         }
     })
-});
+}

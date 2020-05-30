@@ -7,7 +7,7 @@ const db = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
 	port: '3306',
-	password: '',
+	password: 'password',
 	database: 'project'
 });
 
@@ -16,6 +16,7 @@ db.connect((err) => {
 	if (err) {
 		throw err;
 	}
+	console.log("CONNECTED")
 });
 
 const app = express();
@@ -23,11 +24,6 @@ const router = express.Router();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-router.get('/home?', (req, res) => {
-	res.send("home get");
-	console.log("test");
-});
 
 router.get('/supermarkets', (req, res) => {
 	res.sendFile(__dirname + '/client/home.html', {}, function (err) {
@@ -162,14 +158,6 @@ router.post('/customermeanmonth', function (req, res) {
 })
 
 router.post('/addcustomer', function (req, res) {
-	let post = "SELECT card_id ,\
-	points,\
-	CONCAT(first_name,' ', last_name) AS name,\
-	CONCAT(street_name ,' ', street_number ,' ', city ,' ', state ,' ', zipcode) AS adrress,\
-	birth_date,\
-	married,\
-	children,\
-	pets FROM customer WHERE card_id="+ req.body.card_id;
 	db.query('INSERT INTO customer SET?', req.body, function (err) {
 		if (err) {
 			res.send({ msg: err.sqlMessage, success: false })
@@ -213,20 +201,9 @@ router.get('/customers', function (req, res) {
 
 router.post('/insert', (req, res) => {
 	let sql = 'INSERT INTO supermarkets SET ?';
-	let post = {
-		id: req.body.id,
-		square_meters: req.body.square_meters,
-		days_open: req.body.open,
-		times: req.body.opentime + '-' + req.body.closetime,
-		street_name: req.body.streetname,
-		street_number: req.body.streetno,
-		city: req.body.city,
-		state: req.body.state,
-		zipcode: req.body.zip,
-		phone_number: req.body.phone
-	};
-	let query = db.query(sql, post, (err, result) => {
+	let query = db.query(sql, req.body, (err, result) => {
 		if (err) {
+			console.log(err);
 			res.send(false);
 		} else {
 			res.send(result);
@@ -271,7 +248,7 @@ router.post('/getitemsall', function (req, res) {
 router.get('/getitem1', function (req, res) {
 	var barcode = req.query.barcode;
 	var id = req.query.id;
-	let sql = 'SELECT i.name, i.Barcode,d.name as catname,i.signature_item,i.current_price,c.self,c.aisle \
+	let sql = 'SELECT i.name, i.Barcode,d.name as catname,i.category_id,i.signature_item,i.current_price,c.self,c.aisle \
 	FROM item AS i , carries AS c, category AS d\
 	WHERE c.barcode = i.Barcode && d.category_id = i.category_id && i.Barcode=' + barcode + '&& c.store_id =' + id;
 	db.query(sql, function (err, result) {
@@ -281,11 +258,11 @@ router.get('/getitem1', function (req, res) {
 			res.send(result);
 		}
 	});
-});
+});//get item and posiition in store
 
 router.get('/getitem2', function (req, res) {
 	var barcode = req.query.barcode;
-	let sql = 'SELECT i.name, i.Barcode,d.name as catname,i.signature_item,i.current_price \
+	let sql = 'SELECT i.name, i.Barcode,d.name as catname, d.category_id,i.signature_item,i.current_price \
 	FROM item AS i ,  category AS d\
 	WHERE d.category_id = i.category_id && i.Barcode=' + barcode;
 	db.query(sql, function (err, result) {
@@ -295,7 +272,7 @@ router.get('/getitem2', function (req, res) {
 			res.send(result);
 		}
 	});
-});
+});//just get item values
 
 router.get('/getcategories', function (req, res) {
 	db.query('SELECT * FROM category', function (err, result) {
@@ -305,7 +282,7 @@ router.get('/getcategories', function (req, res) {
 			res.send(result);
 		}
 	})
-});
+});// get all categories for forms
 
 
 router.post('/getcustomertranscactions', function (req, res) {
@@ -334,7 +311,7 @@ router.post('/customerfavourite', function (req, res) {
 			res.send({ success: true, dat: data });
 		}
 	})
-})
+})// get customer favourite items
 
 router.post('/getsuperitems', function (req, res) {
 	let id = req.query.id;
@@ -347,14 +324,14 @@ router.post('/getsuperitems', function (req, res) {
 		if (err) console.log(err);
 		res.send(result);
 	});
-});
+});// get all item that supermarket carries
 
 router.post('/getsuperitemsall', function (req, res) {
 	db.query('SELECT Barcode, name FROM item', function (err, result) {
 		if (err) console.log(err);
 		res.send(result);
 	});
-});
+});// get all name-barcode for forms
 
 router.post('/deletesuperitem', function (req, res) {
 	let id = req.query.id;
@@ -368,43 +345,7 @@ router.post('/deletesuperitem', function (req, res) {
 		}
 
 	});
-});
-
-router.get('/editsuper', function (req, res) {
-	res.sendFile(__dirname + '/client/editsuper.html', function (err, result) {
-		if (err) console.log(err);
-	});
-});
-
-
-// router.post('/updateprovides', function (req, res) {
-// 	let sql = 'DELETE FROM provides WHERE\
-// 			(SELECT COUNT(i.category_id)\
-// 			FROM item as i, carries as c\
-// 			WHERE provides.category_id = i.category_id && c.barcode = i.Barcode && provides.store_id = c.store_id) = 0';
-// 	db.query(sql, function (err, result) {
-// 		if (err) {
-// 			res.send(err);
-// 		} else {
-// 			res.sendStatus(200);
-// 		}
-// 	})
-// })
-
-// router.post('/syncprovides', function (req, res) {// DISTINCT FOR DOUBLE OCCURENCES
-// 	let post = 'INSERT INTO provides(store_id,category_id) \
-// 			 SELECT DISTINCT s.id,i.category_id  \
-// 			 FROM supermarkets AS s,item AS i, carries AS c \
-// 			 WHERE c.barcode = i.Barcode && c.store_id = s.id &&\
-// 			 NOT EXISTS(SELECT * FROM provides AS a WHERE a.store_id = s.id && a.category_id = i.category_id)';
-// 	db.query(post, function (err, result) {
-// 		if (err) {
-// 			res.sendStatus(500);
-// 		} else {
-// 			res.sendStatus(200);
-// 		}
-// 	})
-// })
+});// remove item from supermarket
 
 router.post('/updateshop', function (req, res) {
 	let id = req.query.id;
@@ -418,7 +359,7 @@ router.post('/updateshop', function (req, res) {
 		}
 
 	});
-});
+});//
 
 router.post('/updateshopitem', function (req, res) {
 	let id = req.query.id;
@@ -431,19 +372,20 @@ router.post('/updateshopitem', function (req, res) {
 			res.sendStatus(200);
 		}
 	})
-})
+})//
 
 router.post('/updateitem', function (req, res) {
 	let barcode = req.query.barcode;
 	let post = 'UPDATE item SET ? WHERE BARCODE=' + barcode;
 	db.query(post, req.body, function (err, result) {
 		if (err) {
+			console.log(err);
 			res.send(false);
 		} else {
 			res.send(true);
 		}
 	})
-})
+})//
 
 router.post('/deleteitem', function (req, res) {
 	let barcode = req.query.barcode;
@@ -454,15 +396,8 @@ router.post('/deleteitem', function (req, res) {
 			res.send(true);
 		}
 	})
-})
+})//
 
-router.get('/edititem2', function (req, res) {
-	res.sendFile(__dirname + '/client/edititem2.html');
-})
-
-router.get('/edititem', function (req, res) {
-	res.sendFile(__dirname + '/client/edititem.html');
-})
 //#region random data generation 
 
 router.get('/additemrandom', function (req, res) {
@@ -548,9 +483,10 @@ router.get('/addtranscactionrandom', function (req, res) {
 	var obj = {
 		payment_method: payment_types[Math.floor(Math.random() * 3)],
 		card_id: "",
-		date: randomDate(new Date(2018, 0, 1), new Date()) + " " + randomTime(),
+		date: randomDate(new Date(2018, 10, 1), new Date()) + " " + randomTime(),
 		store_id: "",
-		total_price: 0
+		total_price: 0,
+		total_pieces: 0
 	}
 	db.query('SELECT id FROM supermarkets', function (err1, results) {
 		if (err1) {
@@ -647,7 +583,7 @@ router.post('/additem', function (req, res) {
 			})
 		}
 	})
-})
+})// add item and return inserted row
 
 router.post('/addsuperitem', function (req, res) {
 	let id = req.query.id;
@@ -683,7 +619,7 @@ router.post('/addsuperitem', function (req, res) {
 			});
 		}
 	});
-});
+});// insert item and return values for supermarket
 
 router.post('/getcategory', function (req, res) {
 	let id = req.query.id;
@@ -696,7 +632,7 @@ router.post('/getcategory', function (req, res) {
 		if (err) console.log(err);
 		res.send(result);
 	});
-});
+});// store provides categories get
 
 router.post('/gettranscaction', function (req, res) {
 	let id = req.query.id;
@@ -709,7 +645,7 @@ router.post('/gettranscaction', function (req, res) {
 		if (err) console.log(err);
 		res.send(result);
 	});
-});
+});// get store transcactions
 
 router.post('/removetranscaction', function (req, res) {
 	let id = req.query.id;
@@ -721,31 +657,7 @@ router.post('/removetranscaction', function (req, res) {
 			res.sendStatus(200);
 		}
 	});
-});
-
-router.post('/viewsuper', function (req, res) {
-	res.status(200);
-	res.end();
-});
-
-router.get('/viewitem', function (req, res) {
-	res.sendFile(__dirname + '/client/itemview.html');
-})
-
-router.get('/viewsuper2', function (req, res) {
-	res.status(200);
-	res.sendFile(__dirname + '/client/view.html', {}, function (err) {
-		if (err) {
-			console.log(err);
-		} else {
-
-		}
-	});
-});
-
-router.get('/viewcustomer', function (req, res) {
-	res.sendFile(__dirname + '/client/customerview.html');
-})
+});// delete transcaction {!!! not used}
 
 router.post('/deletesuper', (req, res) => {
 	let sql = 'DELETE FROM supermarkets WHERE id = ?';
@@ -769,7 +681,7 @@ router.post('/popularspots', function (req, res) {
 		}
 
 	})
-})
+})// get store popular positions
 
 router.post('/signaturetrust', function (req, res) {
 	let id = req.query.id;
@@ -782,7 +694,7 @@ router.post('/signaturetrust', function (req, res) {
 			res.send({ success: true, dat: result });
 		}
 	})
-})
+})// get store signature item trust
 
 router.post('/filtertranscaction', function (req, res) {
 	let post = "SELECT * FROM transcaction WHERE ";
@@ -841,7 +753,7 @@ router.post('/filtertranscaction', function (req, res) {
 		}
 	})
 
-})
+})// for filtering transcactions
 
 router.post('/moneyspend', function (req, res) {
 	let id = req.query.id;
@@ -854,7 +766,7 @@ router.post('/moneyspend', function (req, res) {
 			res.send({ success: true, dat: result });
 		}
 	})
-})
+})// money spend each hour for stores
 
 router.post('/agetimesuper', function (req, res) {
 	let id = req.query.id;
@@ -871,7 +783,7 @@ router.post('/agetimesuper', function (req, res) {
 			res.send({ success: true, dat: result });
 		}
 	})
-})
+})// age activity each hour
 
 router.post('/popularpairs', function (req, res) {
 	let id = req.query.id;
@@ -887,7 +799,7 @@ router.post('/popularpairs', function (req, res) {
 			res.send({ success: true, dat: result });
 		}
 	})
-})
+})// popular pair combinations as bought
 
 router.post('/getsupersingle', (req, res) => {
 	let id = req.query.id;
@@ -917,6 +829,15 @@ router.post('/getcustomersingle', function (req, res) {
 		}
 	})
 })
+
+router.post('/getcustomer', function (req, res) {
+	let id = req.query.id;
+	let post = `SELECT * FROM customer WHERE card_id = ${id}`;
+	db.query(post, function (err, result) {
+		if (err) throw err;
+		res.send(result);
+	})
+})// reduntant
 
 app.use(express.static(__dirname + '/client', { index: false }));
 
