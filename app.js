@@ -620,7 +620,7 @@ router.post('/addsuperitem', function (req, res) {
 		}
 	});
 });// insert item and return values for supermarket
-
+//code
 router.post('/getcategory', function (req, res) {
 	let id = req.query.id;
 	let sql =
